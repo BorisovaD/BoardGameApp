@@ -29,12 +29,16 @@ The platform allows users to explore clubs, book seats for specific game session
 
 ---
 
-📄 License
+## 📄 License
+
 This project is licensed under the MIT License.
 See the LICENSE file for more details.
 
-💬 Contact
+---
+
+## 💬 Contact
+
 For any questions or feedback, feel free to contact me:
 
 Email: dborisova@yahoo.com
-GitHub: BorisovaD
+GitHub: [BorisovaD](https://github.com/BorisovaD)
