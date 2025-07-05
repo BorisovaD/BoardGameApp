@@ -40,5 +40,5 @@ See the LICENSE file for more details.
 
 For any questions or feedback, feel free to contact me:
 
-Email: dborisova@yahoo.com
-GitHub: [BorisovaD](https://github.com/BorisovaD)
+- Email: dborisova@yahoo.com
+- GitHub: [BorisovaD](https://github.com/BorisovaD)
