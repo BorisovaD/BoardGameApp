@@ -31,5 +31,11 @@
             public const int DescriptionMinLength = 10;
             public const int DescriptionMaxLength = 1000;
         }
+
+        public static class Category
+        {
+            public const int NameMinLength = 3;
+            public const int NameMaxLength = 70;
+        }
     }
 }
