@@ -26,6 +26,7 @@
         [Range(0, 5000)]
         [Comment("Player draws")]
         public int Draws { get; set; }
+
         public DateTime LastUpdated { get; set; }
 
         [Required]
