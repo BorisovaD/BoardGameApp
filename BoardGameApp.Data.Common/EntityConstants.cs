@@ -22,5 +22,14 @@
             public const int AddressMinLength = 8;
             public const int AddressMaxLength = 100;
         }
+
+        public static class BoardGame
+        {
+            public const int TitleMinLength = 2;
+            public const int TitleMaxLength = 100;
+
+            public const int DescriptionMinLength = 10;
+            public const int DescriptionMaxLength = 1000;
+        }
     }
 }
