@@ -10,7 +10,6 @@ The platform allows users to explore clubs, book seats for specific game session
 - 📍 Browse physical board game clubs by city and district
 - 🗓 Book individual spots for board game sessions
 - 🤝 Meet new people and form teams on the spot
-- 🏆 Join tournaments (e.g. Varna vs. Sofia players in Catan)
 - ⭐ Add favorite games to your personal list
 - 📊 View player rankings and personal stats (wins/losses)
 - 🧑‍💻 Admin area for managing games, sessions, and clubs
