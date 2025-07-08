@@ -1,0 +1,52 @@
+[
+  {
+    "Id": "d1b7a2e4-1d65-4ecf-b771-7e1a1e3fd111",
+    "Name": "Sofia",
+    "IsDeleted": false
+  },
+  {
+    "Id": "a3f59d10-b134-4a7a-8e7d-fc9e9d6f76a3",
+    "Name": "Plovdiv",
+    "IsDeleted": false
+  },
+  {
+    "Id": "f93f8e6b-29dc-4b25-9778-2cb9943872af",
+    "Name": "Varna",
+    "IsDeleted": false
+  },
+  {
+    "Id": "b512c8a1-b1e6-4c39-8176-9cfda735f6b0",
+    "Name": "Burgas",
+    "IsDeleted": false
+  },
+  {
+    "Id": "69eaa4f0-d260-403a-b3f1-60e1481793e3",
+    "Name": "Ruse",
+    "IsDeleted": false
+  },
+  {
+    "Id": "33f2b0b2-24e1-41a5-8a65-4f9b541d92a1",
+    "Name": "Stara Zagora",
+    "IsDeleted": false
+  },
+  {
+    "Id": "f84cc99f-bec8-4ad1-98db-02de5ccbd132",
+    "Name": "Pleven",
+    "IsDeleted": false
+  },
+  {
+    "Id": "93c65f0f-95e1-4e27-8a33-c63f8e04ac87",
+    "Name": "Sliven",
+    "IsDeleted": false
+  },
+  {
+    "Id": "e2270f17-3279-4f9b-bb77-94f8f6ec8ec4",
+    "Name": "Dobrich",
+    "IsDeleted": false
+  },
+  {
+    "Id": "a18d9f33-e345-45a7-95fc-d88f2e4ffdc1",
+    "Name": "Shumen",
+    "IsDeleted": false
+  }
+]

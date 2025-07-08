@@ -1,0 +1,127 @@
+[
+  {
+    "ClubId": "0f7f024e-c84d-4d6d-b8ae-038b5a1e124a",
+    "BoardGameId": "2c14a5cd-df61-47e4-82fc-3c66b2a1828b",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "0f7f024e-c84d-4d6d-b8ae-038b5a1e124a",
+    "BoardGameId": "b7e72e14-07d3-446c-90e4-0b2fd2a21d55",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "0f7f024e-c84d-4d6d-b8ae-038b5a1e124a",
+    "BoardGameId": "fae2b2f4-ec0a-4c9e-97b8-6a62d401f3db",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "ba48b417-40f0-402e-91d6-9c2154323dd1",
+    "BoardGameId": "14b6c594-3bb1-4452-a53a-ec0e8be97a6a",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "ba48b417-40f0-402e-91d6-9c2154323dd1",
+    "BoardGameId": "e7dc17f9-40c5-4178-8967-147b147c5f84",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "ba48b417-40f0-402e-91d6-9c2154323dd1",
+    "BoardGameId": "f6f95d26-e7df-46d0-83a4-9aa251a8ac2c",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "e10f3ae2-3f8c-4e6c-bc53-14c9b2d982fe",
+    "BoardGameId": "c1f2319a-3fa2-4f0b-b4ae-68a4f11a77a2",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "e10f3ae2-3f8c-4e6c-bc53-14c9b2d982fe",
+    "BoardGameId": "8a68f4a5-5f2e-4e42-88f0-91d2b6e0a111",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "e10f3ae2-3f8c-4e6c-bc53-14c9b2d982fe",
+    "BoardGameId": "777e3b2d-2e84-4323-b208-b0ae45d6c553",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "b21b2404-c1bc-43dc-860e-5b3feb74c0d4",
+    "BoardGameId": "2c14a5cd-df61-47e4-82fc-3c66b2a1828b",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "b21b2404-c1bc-43dc-860e-5b3feb74c0d4",
+    "BoardGameId": "52fc31be-376f-4654-b1fc-cc3e143eed77",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "b21b2404-c1bc-43dc-860e-5b3feb74c0d4",
+    "BoardGameId": "fae2b2f4-ec0a-4c9e-97b8-6a62d401f3db",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "ae388519-0d87-4b5c-872b-4f9d83f59c17",
+    "BoardGameId": "f6f95d26-e7df-46d0-83a4-9aa251a8ac2c",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "ae388519-0d87-4b5c-872b-4f9d83f59c17",
+    "BoardGameId": "b7e72e14-07d3-446c-90e4-0b2fd2a21d55",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "ae388519-0d87-4b5c-872b-4f9d83f59c17",
+    "BoardGameId": "e7dc17f9-40c5-4178-8967-147b147c5f84",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "51ad029e-d54c-4f1a-b13f-d3488a8027e5",
+    "BoardGameId": "14b6c594-3bb1-4452-a53a-ec0e8be97a6a",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "51ad029e-d54c-4f1a-b13f-d3488a8027e5",
+    "BoardGameId": "777e3b2d-2e84-4323-b208-b0ae45d6c553",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "9128d5c5-061f-4e59-98d2-e79ffb5b8c11",
+    "BoardGameId": "8a68f4a5-5f2e-4e42-88f0-91d2b6e0a111",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "9128d5c5-061f-4e59-98d2-e79ffb5b8c11",
+    "BoardGameId": "c1f2319a-3fa2-4f0b-b4ae-68a4f11a77a2",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "a3e2fcd0-4c74-4f63-94c3-5c536d88dcff",
+    "BoardGameId": "fae2b2f4-ec0a-4c9e-97b8-6a62d401f3db",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "a3e2fcd0-4c74-4f63-94c3-5c536d88dcff",
+    "BoardGameId": "52fc31be-376f-4654-b1fc-cc3e143eed77",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "9efed1db-28c4-4c0b-a240-61b19f37d8b4",
+    "BoardGameId": "b7e72e14-07d3-446c-90e4-0b2fd2a21d55",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "9efed1db-28c4-4c0b-a240-61b19f37d8b4",
+    "BoardGameId": "8a68f4a5-5f2e-4e42-88f0-91d2b6e0a111",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "1a1dd03f-3ae9-443f-9fa6-4c7a213dd327",
+    "BoardGameId": "f6f95d26-e7df-46d0-83a4-9aa251a8ac2c",
+    "IsDeleted": false
+  },
+  {
+    "ClubId": "1a1dd03f-3ae9-443f-9fa6-4c7a213dd327",
+    "BoardGameId": "e7dc17f9-40c5-4178-8967-147b147c5f84",
+    "IsDeleted": false
+  }
+]
