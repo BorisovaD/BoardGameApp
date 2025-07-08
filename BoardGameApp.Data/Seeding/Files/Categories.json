@@ -1,0 +1,57 @@
+[
+  {
+    "Id": "b1fcb491-8e34-4eb0-9436-c702ef76c1c0",
+    "Name": "Strategy",
+    "IsDeleted": false
+  },
+  {
+    "Id": "5f9c402e-2412-4720-b1ee-7f5e6bd8aa8e",
+    "Name": "Family",
+    "IsDeleted": false
+  },
+  {
+    "Id": "d25a0dbf-4a25-460d-b9f9-4f10b3ecf2f1",
+    "Name": "Party",
+    "IsDeleted": false
+  },
+  {
+    "Id": "3c8dbfc9-5663-4fe9-a7eb-e7eefbbb5fe1",
+    "Name": "Card Game",
+    "IsDeleted": false
+  },
+  {
+    "Id": "03f5b4bc-b4bd-4635-8cc2-2fd8095152fe",
+    "Name": "Economic",
+    "IsDeleted": false
+  },
+  {
+    "Id": "ab8cafc2-8f70-494c-b694-1b56e39aa368",
+    "Name": "Historical",
+    "IsDeleted": false
+  },
+  {
+    "Id": "882b720a-3ee3-41e8-9b6c-5ebc6e2f18b0",
+    "Name": "Classic",
+    "IsDeleted": false
+  },
+  {
+    "Id": "38d99a29-cade-420a-8d00-3b2fd600a253",
+    "Name": "Murder / Mystery",
+    "IsDeleted": false
+  },
+  {
+    "Id": "c1b79f68-25e7-4eff-9249-074b693c9fec",
+    "Name": "Cooperative",
+    "IsDeleted": false
+  },
+  {
+    "Id": "e8a40311-4a2c-426d-81a9-d9ef0ac5f770",
+    "Name": "Science fiction",
+    "IsDeleted": false
+  },
+  {
+    "Id": "799c4220-a33b-411b-a46e-8b4423f2e06c",
+    "Name": "Tile placement",
+    "IsDeleted": false
+  } 
+]

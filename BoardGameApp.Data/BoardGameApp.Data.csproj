@@ -14,6 +14,9 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Seeding\Dtos\" />
+    <Folder Include="Seeding\Files\" />
+    <Folder Include="Seeding\Utilities\" />
   </ItemGroup>
 
   <ItemGroup>

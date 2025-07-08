@@ -1,0 +1,87 @@
+[
+  {
+    "CategoryId": "882b720a-3ee3-41e8-9b6c-5ebc6e2f18b0",
+    "BoardGameId": "c1f2319a-3fa2-4f0b-b4ae-68a4f11a77a2",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "5f9c402e-2412-4720-b1ee-7f5e6bd8aa8e",
+    "BoardGameId": "c1f2319a-3fa2-4f0b-b4ae-68a4f11a77a2",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "ab8cafc2-8f70-494c-b694-1b56e39aa368",
+    "BoardGameId": "fae2b2f4-ec0a-4c9e-97b8-6a62d401f3db",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "ab8cafc2-8f70-494c-b694-1b56e39aa368",
+    "BoardGameId": "8a68f4a5-5f2e-4e42-88f0-91d2b6e0a111",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "5f9c402e-2412-4720-b1ee-7f5e6bd8aa8e",
+    "BoardGameId": "b7e72e14-07d3-446c-90e4-0b2fd2a21d55",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "c1b79f68-25e7-4eff-9249-074b693c9fec",
+    "BoardGameId": "52fc31be-376f-4654-b1fc-cc3e143eed77",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "38d99a29-cade-420a-8d00-3b2fd600a253",
+    "BoardGameId": "52fc31be-376f-4654-b1fc-cc3e143eed77",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "c1b79f68-25e7-4eff-9249-074b693c9fec",
+    "BoardGameId": "2c14a5cd-df61-47e4-82fc-3c66b2a1828b",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "e8a40311-4a2c-426d-81a9-d9ef0ac5f770",
+    "BoardGameId": "2c14a5cd-df61-47e4-82fc-3c66b2a1828b",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "5f9c402e-2412-4720-b1ee-7f5e6bd8aa8e",
+    "BoardGameId": "14b6c594-3bb1-4452-a53a-ec0e8be97a6a",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "d25a0dbf-4a25-460d-b9f9-4f10b3ecf2f1",
+    "BoardGameId": "14b6c594-3bb1-4452-a53a-ec0e8be97a6a",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "d25a0dbf-4a25-460d-b9f9-4f10b3ecf2f1",
+    "BoardGameId": "f6f95d26-e7df-46d0-83a4-9aa251a8ac2c",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "3c8dbfc9-5663-4fe9-a7eb-e7eefbbb5fe1",
+    "BoardGameId": "f6f95d26-e7df-46d0-83a4-9aa251a8ac2c",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "b1fcb491-8e34-4eb0-9436-c702ef76c1c0",
+    "BoardGameId": "777e3b2d-2e84-4323-b208-b0ae45d6c553",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "03f5b4bc-b4bd-4635-8cc2-2fd8095152fe",
+    "BoardGameId": "777e3b2d-2e84-4323-b208-b0ae45d6c553",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "5f9c402e-2412-4720-b1ee-7f5e6bd8aa8e",
+    "BoardGameId": "e7dc17f9-40c5-4178-8967-147b147c5f84",
+    "IsDeleted": false
+  },
+  {
+    "CategoryId": "3c8dbfc9-5663-4fe9-a7eb-e7eefbbb5fe1",
+    "BoardGameId": "e7dc17f9-40c5-4178-8967-147b147c5f84",
+    "IsDeleted": false
+  }
+]

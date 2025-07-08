@@ -1,0 +1,112 @@
+[
+  {
+    "Id": "c1f2319a-3fa2-4f0b-b4ae-68a4f11a77a2",
+    "Title": "Ludo",
+    "Description": "Ludo is a race game for 2 to 4 players. Players move their four tokens from start to finish according to the dice rolls.",
+    "ImageUrl": "https://marketa.bg/userfiles/productlargeimages/product_5443.jpg",
+    "RulesUrl": "https://www.ymimports.com/pages/how-to-play-ludo",
+    "MinPlayers": 2,
+    "MaxPlayers": 4,
+    "Duration": 30,
+    "IsDeleted": false
+  },
+  {
+    "Id": "fae2b2f4-ec0a-4c9e-97b8-6a62d401f3db",
+    "Title": "Carcassonne",
+    "Description": "A strategic tile-laying game for building cities, roads, and fields.",
+    "ImageUrl": "https://down-th.img.susercontent.com/file/sg-11134201-7rdvx-m0iontsngwqx05",
+    "RulesUrl": "https://fgbradleys.com/wp-content/uploads/rules/Carcassonne-rules.pdf?srsltid=AfmBOoqJesfeSF7zp6lDcUzqIIBkgDap7PrCfTnYIeP0DD7mNBwM7e9e",
+    "MinPlayers": 2,
+    "MaxPlayers": 5,
+    "Duration": 45,
+    "IsDeleted": false
+  },
+  {
+    "Id": "8a68f4a5-5f2e-4e42-88f0-91d2b6e0a111",
+    "Title": "Ticket to Ride: Europe",
+    "Description": "In Ticket to Ride, players are competing to claim train routes between major cities on the board.",
+    "ImageUrl": "https://m.media-amazon.com/images/I/714k0EwENnL._UF894,1000_QL80_.jpg",
+    "RulesUrl": "https://cdn.1j1ju.com/medias/c0/4f/7d-ticket-to-ride-europe-15th-anniversary-rulebook.pdf",
+    "MinPlayers": 2,
+    "MaxPlayers": 5,
+    "Duration": 60,
+    "IsDeleted": false
+  },
+  {
+    "Id": "b7e72e14-07d3-446c-90e4-0b2fd2a21d55",
+    "Title": "Takenoko",
+    "Description": "Carefully cultivate a bamboo garden with the help of a gardener and a hungry panda.",
+    "ImageUrl": "https://cdn.svc.asmodee.net/production-asmodeeit/uploads/image-converter/2022/09/8131_2.webp",
+    "RulesUrl": "https://studiobombyx.com/assets/TAKENOKO_rulebook_EN.pdf",
+    "MinPlayers": 2,
+    "MaxPlayers": 4,
+    "Duration": 45,
+    "IsDeleted": false
+  },
+  {
+    "Id": "52fc31be-376f-4654-b1fc-cc3e143eed77",
+    "Title": "Mysterium",
+    "Description": "Become a psychic and divine spectral visions to solve the murder of a restless ghost.",
+    "ImageUrl": "https://cdn.svc.asmodee.net/production-asmodeenordics/uploads/image-converter/2022/01/Mysterium_Box_Spread-1024x867.webp",
+    "RulesUrl": "https://cdn.svc.asmodee.net/production-libellud/uploads/2022/03/MYST_RULES_EN_BD.pdf",
+    "MinPlayers": 2,
+    "MaxPlayers": 7,
+    "Duration": 42,
+    "IsDeleted": false
+  },
+  {
+    "Id": "2c14a5cd-df61-47e4-82fc-3c66b2a1828b",
+    "Title": "Pandemic",
+    "Description": "Your team of experts must prevent the world from succumbing to a viral pandemic.",
+    "ImageUrl": "https://s13emagst.akamaized.net/products/24301/24300350/images/res_f1482d07b710fd3ac67fabf812388cd1.jpg",
+    "RulesUrl": "http://images-cdn.zmangames.com/us-east-1/filer_public/25/12/251252dd-1338-4f78-b90d-afe073c72363/zm7101_pandemic_rules.pdf",
+    "MinPlayers": 2,
+    "MaxPlayers": 4,
+    "Duration": 45,
+    "IsDeleted": false
+  },
+  {
+    "Id": "14b6c594-3bb1-4452-a53a-ec0e8be97a6a",
+    "Title": "Bonsai",
+    "Description": "Use your mastery of cultivation and meditation to guide the growth of your bonsai.",
+    "ImageUrl": "https://www.thefamilygamers.com/wp-content/uploads/Bonsai_beauty4.jpg",
+    "RulesUrl": "https://www.dvgiochi.com/giochi/bonsai/download/Bonsai_ENG-Rules_WEB.pdf",
+    "MinPlayers": 1,
+    "MaxPlayers": 4,
+    "Duration": 40,
+    "IsDeleted": false
+  },
+  {
+    "Id": "f6f95d26-e7df-46d0-83a4-9aa251a8ac2c",
+    "Title": "Saboteur",
+    "Description": "You are dwarves laying tunnel cards to get gold: but which one of you is the traitor?",
+    "ImageUrl": "https://www.leisurelearning.com.au/assets/full/VR63390.jpg?20241031111504",
+    "RulesUrl": "https://cdn.1j1ju.com/medias/83/8a/e7-saboteur-rulebook.pdf",
+    "MinPlayers": 3,
+    "MaxPlayers": 10,
+    "Duration": 30,
+    "IsDeleted": false
+  },
+  {
+    "Id": "777e3b2d-2e84-4323-b208-b0ae45d6c553",
+    "Title": "Monopoly",
+    "Description": "In this competitive real estate market, there's only one possible outcome: Monopoly!",
+    "ImageUrl": "https://m.media-amazon.com/images/I/91j9o-l-OXL._UF894,1000_QL80_.jpg",
+    "RulesUrl": "https://monopoly.fandom.com/wiki/Monopoly_Rules",
+    "MinPlayers": 2,
+    "MaxPlayers": 8,
+    "Duration": 180,
+    "IsDeleted": false
+  },
+  {
+    "Id": "e7dc17f9-40c5-4178-8967-147b147c5f84",
+    "Title": "Splendor",
+    "Description": "Renaissance merchants race to grab gems, acquire property, and please nobility.",
+    "ImageUrl": "https://www.thegamesteward.com/cdn/shop/products/splendor-retail-edition-space-cowboys-34736534978712_600x.jpg?v=1634381140",
+    "RulesUrl": "https://cdn.1j1ju.com/medias/7f/91/ba-splendor-rulebook.pdf",
+    "MinPlayers": 2,
+    "MaxPlayers": 4,
+    "Duration": 30,
+    "IsDeleted": false
+  }
+]
