@@ -1,4 +1,5 @@
 using BoardGameApp.Data;
+using BoardGameApp.Data.Seeding.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,17 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<BoardGameAppDbContext>();
+    
+    DataProcessor.ImportBoardGames(dbContext);
+    DataProcessor.ImportCategories(dbContext);
+    DataProcessor.ImportBoardGameCategories(dbContext);
+    DataProcessor.ImportCities(dbContext);
+    DataProcessor.ImportClubs(dbContext);
+    DataProcessor.ImportClubBoardGames(dbContext);
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
