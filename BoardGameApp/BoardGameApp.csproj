@@ -29,4 +29,8 @@
     <ProjectReference Include="..\BoardGameApp.Web.ViewModels\BoardGameApp.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>

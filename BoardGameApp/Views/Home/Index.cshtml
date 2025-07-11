@@ -2,7 +2,110 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .board-container {
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 100px); 
+        background: url('/images/boardgame.jpg') center center no-repeat;
+        background-size: contain;
+    }
+
+    .pawn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        position: absolute;
+        transition: transform 1s ease-in-out;
+    }
+
+    .red {
+        background-color: #e42336;
+        left: 77%;
+        top: 5.5%;
+    }
+
+    .blue {
+        background-color: #019df0;
+        left: 20.7%;
+        top: 5.5%;
+    }
+
+    .green {
+        background-color: #c8d971;
+        left: 20.7%;
+        top: 90%;
+    }
+
+    .yellow {
+        background-color: #ffff5f;
+        left: 76%;
+        top: 90%;
+    }
+
+    .menu-button {
+        position: absolute;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        background-color: #f9dacd;
+        font-weight: bold;
+        border-radius: 10px;
+        transition: transform 0.5s ease;
+    }
+
+    #games {
+        top: 47%;
+        left: 10%;
+    }
+
+    #clubs {
+        top: 47%;
+        left: 80%;
+    }
+
+    #sessions {
+        top: 83.3%;
+        left: 44%;
+    }
+
+    #favorites {
+        top: 11%;
+        left: 46%;
+    }
+
+    .menu-button:hover {
+        transform: scale(1.1);
+    }
+</style>
+
+<div class="board-container">
+    <div class="pawn red" id="pawn-red"></div>
+    <div class="pawn blue" id="pawn-blue"></div>
+    <div class="pawn green" id="pawn-green"></div>
+    <div class="pawn yellow" id="pawn-yellow"></div>
+
+    <button class="menu-button" id="games">BoardGames</button>
+    <button class="menu-button" id="clubs">Clubs</button>
+    <button class="menu-button" id="sessions">GameSessions</button>
+    <button class="menu-button" id="favorites">Favorites</button>
 </div>
+
+<script>
+    document.getElementById("favorites").addEventListener("mouseenter", () => {
+        document.getElementById("pawn-red").style.transform = "translateX(-44.5vh)";
+    });
+
+    document.getElementById("games").addEventListener("mouseenter", () => {
+        document.getElementById("pawn-blue").style.transform = "translateY(43.5vh)";
+    });
+
+    document.getElementById("sessions").addEventListener("mouseenter", () => {
+        document.getElementById("pawn-green").style.transform = "translateX(21.4vw)";
+    });
+
+    document.getElementById("clubs").addEventListener("mouseenter", () => {
+        document.getElementById("pawn-yellow").style.transform = "translateY(-21.3vw)";
+    });
+</script>
