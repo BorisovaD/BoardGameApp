@@ -1,10 +1,11 @@
 using System.Diagnostics;
+using BoardGameApp.Controllers;
 using BoardGameApp.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoardGameApp.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 

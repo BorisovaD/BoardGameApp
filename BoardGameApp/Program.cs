@@ -1,5 +1,7 @@
 using BoardGameApp.Data;
 using BoardGameApp.Data.Seeding.Utilities;
+using BoardGameApp.Services.Core;
+using BoardGameApp.Services.Core.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +19,19 @@ builder.Services.AddDbContext<BoardGameAppDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 5;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+})
     .AddEntityFrameworkStores<BoardGameAppDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IBoardGameService, BoardGameService>();
 
 var app = builder.Build();
 
@@ -52,6 +64,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "boardgames",
+    pattern: "BoardGames",
+    defaults: new { controller = "BoardGame", action = "Index" });
 
 app.MapControllerRoute(
     name: "default",
