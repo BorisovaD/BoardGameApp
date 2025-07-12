@@ -10,5 +10,17 @@
     public interface IBoardGameService
     {
         Task<IEnumerable<AllBoardGamesIndexViewModel>> GetAllBoardGamesAsync(Guid? userId);
+
+        Task<bool> AddBoardGameAsync(Guid? userId, AddBoardGameInputModel inputModel);
+
+        Task<BoardGameDetailsViewModel> GetBoardGameDetailsAsync(Guid? id, Guid? userId);
+
+        Task<EditBoardGameInputModel?> GetBoardGameForEditingAsync(Guid? userId, Guid? boardGameId);
+
+        Task<bool> PersistUpdatedGameBoardAsync(Guid? userId, EditBoardGameInputModel inputModel);
+
+        Task<DeleteBoardGameInputModel?> GetBoardGameForDeletingAsync(Guid? userId, Guid? boardGameId);
+
+        public Task<bool> SoftDeleteBoardGameAsync(Guid? userId, DeleteBoardGameInputModel inputModel);
     }
 }

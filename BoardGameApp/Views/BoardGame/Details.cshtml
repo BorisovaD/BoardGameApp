@@ -1,0 +1,77 @@
+﻿@using BoardGameApp.Web.ViewModels.BoardGame
+@model BoardGameDetailsViewModel
+@{
+    ViewData["Title"] = "BoardGame Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
+    <h2>@ViewData["Title"]</h2>
+</div>
+<hr />
+
+<div class="row justify-content-center" style="margin: 0 auto; max-width: 800px;">
+    <div class="col-md-4 text-center">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" class="img-fluid" style="max-width: 100%; height: auto;" alt="@Model.Title" />
+        }
+        else
+        {
+            <img src="~/images/default-image.jpg" class="img-fluid" style="max-width: 100%; height: auto;" alt="No Image Available" />
+        }
+    </div>
+
+    <div class="col-md-8">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+            <hr />
+            <p class="card-text">@Model.Description</p>
+            <hr />
+            <p class="card-text">
+                <small class="text-muted">Categories:</small><br />
+                @foreach (var category in Model.Categories)
+                {
+                    <span class="badge bg-secondary me-1">@category</span>
+                }
+            </p>
+            @if (!string.IsNullOrWhiteSpace(Model.RulesUrl))
+            {
+                <p class="card-text">
+                    <small class="text-muted">
+                        <strong>Rules: </strong>
+                        <a href="@Model.RulesUrl" target="_blank" rel="noopener noreferrer">View Rules</a>
+                    </small>
+                </p>
+            }
+            <p class="card-text"><small class="text-muted">MinPlayers: @Model.MinPlayers</small></p>
+            <p class="card-text"><small class="text-muted">MaxPlayers: @Model.MaxPlayers</small></p>
+            <p class="card-text"><small class="text-muted">Duration: @Model.Duration</small></p>
+            <hr />
+        </div>
+        <div class="card-footer text-center">
+            <div class="d-flex justify-content-between align-items-center">
+                <button type="button" class="btn btn-warning d-flex justify-content-center align-items-center flex-fill mx-1" onclick="history.back()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                @if (User?.Identity?.IsAuthenticated == true && !Model.IsSaved)
+                {
+                    <form asp-controller="BoardGame" asp-action="Save" method="post" class="d-flex justify-content-center align-items-center flex-fill mx-1">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-heart"></i> Add to Favorites
+                        </button>
+                    </form>
+                }
+                @*@if (Model.IsAuthor) { }*@
+                
+                <a asp-controller="BoardGame" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary d-flex justify-content-center align-items-center flex-fill mx-1">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a asp-controller="BoardGame" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger d-flex justify-content-center align-items-center flex-fill mx-1">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</div>

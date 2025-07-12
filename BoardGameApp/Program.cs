@@ -32,6 +32,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IBoardGameService, BoardGameService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 
@@ -67,9 +68,8 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "boardgames",
-    pattern: "BoardGames",
-    defaults: new { controller = "BoardGame", action = "Index" });
-
+    pattern: "BoardGames/{action=Index}/{id?}",
+    defaults: new { controller = "BoardGame" });
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

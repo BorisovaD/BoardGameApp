@@ -86,7 +86,9 @@
     <div class="pawn green" id="pawn-green"></div>
     <div class="pawn yellow" id="pawn-yellow"></div>
 
-    <button class="menu-button" id="games">BoardGames</button>
+    <button class="menu-button" id="games" onclick="location.href='@Url.Action("Index", "BoardGame")'">
+        BoardGames
+    </button>
     <button class="menu-button" id="clubs">Clubs</button>
     <button class="menu-button" id="sessions">GameSessions</button>
     <button class="menu-button" id="favorites">Favorites</button>
