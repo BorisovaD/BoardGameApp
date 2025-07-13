@@ -55,7 +55,7 @@
                 </button>
                 @if (User?.Identity?.IsAuthenticated == true && !Model.IsSaved)
                 {
-                    <form asp-controller="BoardGame" asp-action="Save" method="post" class="d-flex justify-content-center align-items-center flex-fill mx-1">
+                    <form asp-controller="BoardGame" asp-action="AddToFavorites" method="post" class="d-flex justify-content-center align-items-center flex-fill mx-1">
                         <input type="hidden" name="id" value="@Model.Id" />
                         <button type="submit" class="btn btn-success w-100">
                             <i class="fas fa-heart"></i> Add to Favorites

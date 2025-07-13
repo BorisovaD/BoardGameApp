@@ -1,4 +1,5 @@
 using BoardGameApp.Data;
+using BoardGameApp.Data.Models;
 using BoardGameApp.Data.Seeding.Utilities;
 using BoardGameApp.Services.Core;
 using BoardGameApp.Services.Core.Contracts;
@@ -7,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -19,7 +19,7 @@ builder.Services.AddDbContext<BoardGameAppDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+builder.Services.AddDefaultIdentity<BoardgameUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = false;
@@ -28,7 +28,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
 })
-    .AddEntityFrameworkStores<BoardGameAppDbContext>();
+    .AddRoles<IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<BoardGameAppDbContext>(); 
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IBoardGameService, BoardGameService>();
@@ -47,7 +49,7 @@ using (var scope = app.Services.CreateScope())
     DataProcessor.ImportClubs(dbContext);
     DataProcessor.ImportClubBoardGames(dbContext);
 }
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -55,7 +57,7 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    
     app.UseHsts();
 }
 
@@ -64,6 +66,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

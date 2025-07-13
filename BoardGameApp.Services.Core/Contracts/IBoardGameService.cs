@@ -22,5 +22,11 @@
         Task<DeleteBoardGameInputModel?> GetBoardGameForDeletingAsync(Guid? userId, Guid? boardGameId);
 
         public Task<bool> SoftDeleteBoardGameAsync(Guid? userId, DeleteBoardGameInputModel inputModel);
+
+        Task<IEnumerable<FavoritesBoardGameViewModel>?> GetUserFavoritesBoardGameAsync(Guid? userId);
+
+        Task<bool> AddBoardGameToUserFavoritesListAsync(Guid? userId, Guid boardGameId);
+
+        Task<bool> RemoveBoardGameFromUserFavoritesListAsync(Guid? userId, Guid boardGameId);
     }
 }

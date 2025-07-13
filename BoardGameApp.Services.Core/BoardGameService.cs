@@ -16,8 +16,8 @@
     public class BoardGameService : IBoardGameService
     {
         private readonly BoardGameAppDbContext dbContext;
-        private readonly UserManager<IdentityUser> userManager;
-        public BoardGameService(BoardGameAppDbContext dbContext, UserManager<IdentityUser> userManager)
+        private readonly UserManager<BoardgameUser> userManager;
+        public BoardGameService(BoardGameAppDbContext dbContext, UserManager<BoardgameUser> userManager)
         {
             this.dbContext = dbContext;
             this.userManager = userManager;
@@ -27,34 +27,76 @@
         {
             bool opResult = false;
 
-            IdentityUser? user = await this.userManager.FindByIdAsync(userId.ToString()!);
-
-            if ((user != null) && inputModel.SelectedCategoryIds.Any())
+            if (userId.HasValue)
             {
-                BoardGame newBoardGame = new BoardGame()
+                BoardgameUser? user = await this.userManager.FindByIdAsync(userId.Value.ToString());
+
+
+                if ((user != null) && inputModel.SelectedCategoryIds.Any())
                 {
-                    Title = inputModel.Title,
-                    Description = inputModel.Description,
-                    ImageUrl = inputModel.ImageUrl,
-                    RulesUrl = inputModel.RulesUrl,
-                    MinPlayers = inputModel.MinPlayers,
-                    MaxPlayers = inputModel.MaxPlayers,
-                    Duration = inputModel.Duration
-                };
-                                
-                foreach (var categoryId in inputModel.SelectedCategoryIds)
-                {
-                    newBoardGame.BoardGameCategories.Add(new BoardGameCategory
+                    BoardGame newBoardGame = new BoardGame()
                     {
-                        CategoryId = categoryId,
-                        BoardGameId = newBoardGame.Id
-                    });
+                        Title = inputModel.Title,
+                        Description = inputModel.Description,
+                        ImageUrl = inputModel.ImageUrl,
+                        RulesUrl = inputModel.RulesUrl,
+                        MinPlayers = inputModel.MinPlayers,
+                        MaxPlayers = inputModel.MaxPlayers,
+                        Duration = inputModel.Duration
+                    };
+
+                    foreach (var categoryId in inputModel.SelectedCategoryIds)
+                    {
+                        newBoardGame.BoardGameCategories.Add(new BoardGameCategory
+                        {
+                            CategoryId = categoryId,
+                            BoardGameId = newBoardGame.Id
+                        });
+                    }
+
+                    await this.dbContext.BoardGames.AddAsync(newBoardGame);
+                    await this.dbContext.SaveChangesAsync();
+
+                    opResult = true;
                 }
+            }
 
-                await this.dbContext.BoardGames.AddAsync(newBoardGame);
-                await this.dbContext.SaveChangesAsync();
+            return opResult;
+        }
 
-                opResult = true;
+        public async Task<bool> AddBoardGameToUserFavoritesListAsync(Guid? userId, Guid boardGameId)
+        {
+            bool opResult = false;
+
+            if (userId == null)
+            {
+                return false;
+            }
+
+            BoardGame? favBoardGame = await this.dbContext
+                .BoardGames
+                .FindAsync(boardGameId);
+
+            if (favBoardGame != null)
+            {
+                BoardgameUserFavorite? userFavBoardGame = await this.dbContext
+                    .BoardgameUserFavorites
+                    .SingleOrDefaultAsync(uf => uf.UserId == userId &&
+                                                uf.BoardGameId == boardGameId);
+
+                if (userFavBoardGame == null)
+                {
+                    userFavBoardGame = new BoardgameUserFavorite()
+                    {
+                        UserId = (Guid)userId!,
+                        BoardGameId = boardGameId,
+                    };
+
+                    await this.dbContext.BoardgameUserFavorites.AddAsync(userFavBoardGame);
+                    await this.dbContext.SaveChangesAsync();
+
+                    opResult = true;
+                }
             }
 
             return opResult;
@@ -184,42 +226,104 @@
             return editModel;
         }
 
+        public async Task<IEnumerable<FavoritesBoardGameViewModel>?> GetUserFavoritesBoardGameAsync(Guid? userId)
+        {  
+            if (userId == null)
+            {
+                return Enumerable.Empty<FavoritesBoardGameViewModel>();
+            }
+
+            IEnumerable<FavoritesBoardGameViewModel> favBoardGames = await this.dbContext
+                .BoardgameUserFavorites
+                .Include(uf => uf.BoardGame)
+                .ThenInclude(bc => bc.BoardGameCategories)
+                .ThenInclude(c => c.Category)
+                .Where(bc => bc.UserId == userId)
+                .Select(f => new FavoritesBoardGameViewModel()
+                {
+                    Id = f.BoardGameId,
+                    Title = f.BoardGame.Title,
+                    Description = f.BoardGame.Description,
+                    ImageUrl = f.BoardGame.ImageUrl,
+                    RulesUrl = f.BoardGame.RulesUrl,
+                    MinPlayers = f.BoardGame.MinPlayers.ToString(),
+                    MaxPlayers = f.BoardGame.MaxPlayers.ToString(),
+                    Duration = f.BoardGame.Duration.ToString(),
+                    Categories = f.BoardGame.BoardGameCategories
+                                     .Select(bc => bc.Category.Name)
+                                     .ToList()
+                })
+                .ToArrayAsync();
+
+            return favBoardGames;
+        }
+
         public async Task<bool> PersistUpdatedGameBoardAsync(Guid? userId, EditBoardGameInputModel inputModel)
         {
             bool opResult = false;
 
-            IdentityUser? user = await this.userManager.FindByIdAsync(userId.ToString()!);
-
-            BoardGame? updatedBoardGame = await this.dbContext
-                .BoardGames
-                .Include(bg => bg.BoardGameCategories)
-                .FirstOrDefaultAsync(bg => bg.Id == inputModel.Id);
-
-            if ((user != null) && (updatedBoardGame != null))
+            if (userId.HasValue)
             {
-                updatedBoardGame.Title = inputModel.Title;
-                updatedBoardGame.Description = inputModel.Description;
-                updatedBoardGame.ImageUrl = inputModel.ImageUrl;
-                updatedBoardGame.RulesUrl = inputModel.RulesUrl;
-                updatedBoardGame.MinPlayers = inputModel.MinPlayers;
-                updatedBoardGame.MaxPlayers = inputModel.MaxPlayers;
-                updatedBoardGame.Duration = inputModel.Duration;
+                BoardgameUser? user = await this.userManager.FindByIdAsync(userId.Value.ToString());
 
-                updatedBoardGame.BoardGameCategories.Clear();
 
-                foreach (var categoryId in inputModel.SelectedCategoryIds)
+                BoardGame? updatedBoardGame = await this.dbContext
+                    .BoardGames
+                    .Include(bg => bg.BoardGameCategories)
+                    .FirstOrDefaultAsync(bg => bg.Id == inputModel.Id);
+
+                if ((user != null) && (updatedBoardGame != null))
                 {
-                    updatedBoardGame.BoardGameCategories.Add(new BoardGameCategory
-                    {
-                        BoardGameId = updatedBoardGame.Id,
-                        CategoryId = categoryId
-                    });
-                }
+                    updatedBoardGame.Title = inputModel.Title;
+                    updatedBoardGame.Description = inputModel.Description;
+                    updatedBoardGame.ImageUrl = inputModel.ImageUrl;
+                    updatedBoardGame.RulesUrl = inputModel.RulesUrl;
+                    updatedBoardGame.MinPlayers = inputModel.MinPlayers;
+                    updatedBoardGame.MaxPlayers = inputModel.MaxPlayers;
+                    updatedBoardGame.Duration = inputModel.Duration;
 
+                    updatedBoardGame.BoardGameCategories.Clear();
+
+                    foreach (var categoryId in inputModel.SelectedCategoryIds)
+                    {
+                        updatedBoardGame.BoardGameCategories.Add(new BoardGameCategory
+                        {
+                            BoardGameId = updatedBoardGame.Id,
+                            CategoryId = categoryId
+                        });
+                    }
+
+                    await this.dbContext.SaveChangesAsync();
+
+                    opResult = true;
+                }
+            }
+
+            return opResult;
+        }
+
+        public async Task<bool> RemoveBoardGameFromUserFavoritesListAsync(Guid? userId, Guid boardGameId)
+        {
+            bool opResult = false;
+
+            if (userId == null)
+            {
+                return false;
+            }
+
+            
+            BoardgameUserFavorite? userFavBoardGame = await this.dbContext
+                .BoardgameUserFavorites
+                .SingleOrDefaultAsync(uf => uf.UserId == userId &&
+                                            uf.BoardGameId == boardGameId);
+            if (userFavBoardGame != null)
+            {
+                this.dbContext.BoardgameUserFavorites.Remove(userFavBoardGame);
                 await this.dbContext.SaveChangesAsync();
 
                 opResult = true;
             }
+            
 
             return opResult;
         }
@@ -228,22 +332,25 @@
         {
             bool opResult = false;
 
-            IdentityUser? user = await this.userManager.FindByIdAsync(userId.ToString()!);
-
-            BoardGame? deletedBoardGame = await this.dbContext
-                .BoardGames
-                .FindAsync(inputModel.Id);
-
-
-            if ((user != null) && (deletedBoardGame != null))
+            if (userId.HasValue)
             {
-                deletedBoardGame.IsDeleted = true;
+                BoardgameUser? user = await this.userManager.FindByIdAsync(userId.Value.ToString());
 
-                await this.dbContext.SaveChangesAsync();
 
-                opResult = true;
+                BoardGame? deletedBoardGame = await this.dbContext
+                    .BoardGames
+                    .FindAsync(inputModel.Id);
+
+
+                if ((user != null) && (deletedBoardGame != null))
+                {
+                    deletedBoardGame.IsDeleted = true;
+
+                    await this.dbContext.SaveChangesAsync();
+
+                    opResult = true;
+                }
             }
-
             return opResult;
         }
     }

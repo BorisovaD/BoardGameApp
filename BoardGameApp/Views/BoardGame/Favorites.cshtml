@@ -1,0 +1,71 @@
+﻿@using BoardGameApp.Web.ViewModels.BoardGame
+@model IEnumerable<FavoritesBoardGameViewModel>
+@{
+    ViewData["Title"] = "Favorite BoardGames";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
+    <h2>@ViewData["Title"]</h2>
+</div>
+<hr />
+
+@if (Model == null || !Model.Any())
+{
+    <div class="text-center mt-5">
+        <h4>You don't have any favorite board games yet!</h4>
+        <p class="text-muted">Start playing and save your favorite board games.</p>
+    </div>
+}
+else
+{
+    @foreach (var game in Model)
+    {
+        <div class="row align-items-center mb-4 py-3" style="border-bottom: 1px solid #ccc;">
+            <div class="col-md-2 text-center">
+                @if (!string.IsNullOrEmpty(@game.ImageUrl))
+                {
+                    <img src="@game.ImageUrl" class="img-fluid" style="max-height: 100px; object-fit: contain;" alt="@game.Title" />
+                }
+                else
+                {
+                    <img src="~/images/default-image.jpg" class="img-fluid" style="max-height: 100px; object-fit: contain;" alt="No Image Available" />
+                }
+            </div>
+            <div class="col-md-4 text-start">
+                <h5 class="mb-0">@game.Title</h5>
+                <p class="text-muted mb-0">
+                    <small>🏷️ <strong>Categories:</strong> @string.Join(", ", game.Categories)</small>
+                </p>
+                @if (!string.IsNullOrEmpty(game.RulesUrl))
+                {
+                    <p class="mb-0">
+                        <small>
+                            📘 <strong>Rules:</strong>
+                            <a href="@game.RulesUrl" target="_blank" rel="noopener noreferrer">
+                                View Rules
+                            </a>
+                        </small>
+                    </p>
+                }
+                <p class="text-muted mb-0"><small>🎲 <strong>Players:</strong>@game.MinPlayers - @game.MaxPlayers</small></p>
+                <p class="text-muted mb-0"><small>⏳ <strong>Duration:</strong>@game.Duration min</small></p>
+            </div>
+            <div class="col-md-4 text-end d-flex flex-column gap-2">
+                <a asp-controller="BoardGame" asp-action="Details" asp-route-id="@game.Id" class="btn btn-info fw-bold w-100">
+                    <i class="fas fa-info-circle"></i> Details
+                </a>
+                <form asp-controller="BoardGame" asp-action="RemoveFromFavorites" asp-route-id="@game.Id" method="post">
+                    <button type="submit" class="btn btn-danger fw-bold w-100">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    }
+}
+<div class="text-center mt-5">
+    <a asp-controller="BoardGame" asp-action="Index" class="btn btn-primary mt-3">
+        <i class="fas fa-arrow-left"></i> Back to BoardGames
+    </a>
+</div>

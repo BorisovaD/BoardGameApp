@@ -1,14 +1,15 @@
 ﻿using BoardGameApp.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using static BoardGameApp.GCommon.ApplicationConstants;
 
 namespace BoardGameApp.Data
 {
-    public class BoardGameAppDbContext : IdentityDbContext
+    public class BoardGameAppDbContext : IdentityDbContext<BoardgameUser, IdentityRole<Guid>, Guid>
     {
         public BoardGameAppDbContext(DbContextOptions<BoardGameAppDbContext> options)
-            : base(options)
+        : base(options)
         {
         }
 
