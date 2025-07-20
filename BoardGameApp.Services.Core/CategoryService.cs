@@ -1,6 +1,8 @@
 ﻿namespace BoardGameApp.Services.Core
 {
     using BoardGameApp.Data;
+    using BoardGameApp.Data.Models;
+    using BoardGameApp.Data.Repository.Interfaces;
     using BoardGameApp.Services.Core.Contracts;
     using BoardGameApp.Web.ViewModels.BoardGame;
     using Microsoft.EntityFrameworkCore;
@@ -12,15 +14,17 @@
 
     public class CategoryService : ICategoryService
     {
-        private readonly BoardGameAppDbContext dbContext;
-        public CategoryService(BoardGameAppDbContext dbContext)
+        private readonly IRepository<Category> categoryRepository;
+
+        public CategoryService(IRepository<Category> categoryRepository)
         {
-            this.dbContext = dbContext;
+            this.categoryRepository = categoryRepository;
         }
         public async Task<IEnumerable<CreateBoardGameCategoryDropDownModel>> GetCategoriesDropDownDataAsync()
         {
-            IEnumerable<CreateBoardGameCategoryDropDownModel> categoriesAsDropDown = await this.dbContext
-            .Categories
+            IEnumerable<CreateBoardGameCategoryDropDownModel> categoriesAsDropDown = await categoryRepository
+            .All()
+            .Where(c => c.IsDeleted == false)
             .AsNoTracking()
             .Select(c => new CreateBoardGameCategoryDropDownModel()
             {

@@ -2,6 +2,7 @@
 {
     using BoardGameApp.Data;
     using BoardGameApp.Data.Models;
+    using BoardGameApp.Data.Repository.Interfaces;
     using BoardGameApp.Services.Core.Contracts;
     using BoardGameApp.Web.ViewModels.BoardGame;
     using Microsoft.AspNetCore.Identity;
@@ -15,11 +16,15 @@
 
     public class BoardGameService : IBoardGameService
     {
-        private readonly BoardGameAppDbContext dbContext;
+        private readonly IRepository<BoardGame> boardGameRepository;
+        private readonly IRepository<BoardgameUserFavorite> favoritesRepository;
         private readonly UserManager<BoardgameUser> userManager;
-        public BoardGameService(BoardGameAppDbContext dbContext, UserManager<BoardgameUser> userManager)
+        public BoardGameService(IRepository<BoardGame> boardGameRepository, 
+                                IRepository<BoardgameUserFavorite> favoritesRepository,
+                                UserManager<BoardgameUser> userManager)
         {
-            this.dbContext = dbContext;
+            this.boardGameRepository = boardGameRepository;
+            this.favoritesRepository = favoritesRepository;
             this.userManager = userManager;
         }
 
@@ -50,12 +55,11 @@
                         newBoardGame.BoardGameCategories.Add(new BoardGameCategory
                         {
                             CategoryId = categoryId,
-                            BoardGameId = newBoardGame.Id
                         });
                     }
 
-                    await this.dbContext.BoardGames.AddAsync(newBoardGame);
-                    await this.dbContext.SaveChangesAsync();
+                    await this.boardGameRepository.AddAsync(newBoardGame);
+                    await this.boardGameRepository.SaveChangesAsync();
 
                     opResult = true;
                 }
@@ -73,30 +77,33 @@
                 return false;
             }
 
-            BoardGame? favBoardGame = await this.dbContext
-                .BoardGames
-                .FindAsync(boardGameId);
+            BoardGame? favBoardGame = await this.boardGameRepository.GetByIdAsync(boardGameId);
 
             if (favBoardGame != null)
-            {
-                BoardgameUserFavorite? userFavBoardGame = await this.dbContext
-                    .BoardgameUserFavorites
-                    .SingleOrDefaultAsync(uf => uf.UserId == userId &&
-                                                uf.BoardGameId == boardGameId);
+            {     
+                BoardgameUserFavorite? userFavBoardGame = await this.favoritesRepository
+                    .FirstOrDefaultAsync(uf => uf.UserId == userId && uf.BoardGameId == boardGameId);
 
-                if (userFavBoardGame == null)
+                if (userFavBoardGame != null)
                 {
-                    userFavBoardGame = new BoardgameUserFavorite()
+                    await this.favoritesRepository.ReturnExisting(userFavBoardGame);
+                    await this.favoritesRepository.SaveChangesAsync();
+
+                }
+                else
+                {
+                    
+                    var newFavorite = new BoardgameUserFavorite
                     {
-                        UserId = (Guid)userId!,
-                        BoardGameId = boardGameId,
+                        UserId = userId.Value,
+                        BoardGameId = boardGameId
                     };
 
-                    await this.dbContext.BoardgameUserFavorites.AddAsync(userFavBoardGame);
-                    await this.dbContext.SaveChangesAsync();
-
-                    opResult = true;
+                    await this.favoritesRepository.AddAsync(newFavorite);
+                    await this.favoritesRepository.SaveChangesAsync();
                 }
+
+                opResult = true;                
             }
 
             return opResult;
@@ -104,10 +111,9 @@
 
         public async Task<IEnumerable<AllBoardGamesIndexViewModel>> GetAllBoardGamesAsync(Guid? userId)
         {
-            IEnumerable<AllBoardGamesIndexViewModel> allGames = await dbContext
-                .BoardGames
+            AllBoardGamesIndexViewModel[]? allGames = await boardGameRepository
+                .All()                
                 .Where(g => g.IsDeleted == false)
-                .Include(g => g.FavoritedByUsers)
                 .Select(g => new AllBoardGamesIndexViewModel
                 {
                     Id = g.Id.ToString(),
@@ -117,9 +123,8 @@
                     RulesUrl = g.RulesUrl,
                     MinPlayers = g.MinPlayers.ToString(),
                     MaxPlayers = g.MaxPlayers.ToString(),
-                    Duration = g.Duration.ToString(),                 
-                    IsSaved = userId != null ? 
-                        g.FavoritedByUsers.Any(f => f.UserId == userId) : false,
+                    Duration = g.Duration.ToString(),
+                    IsSaved = userId != null && g.FavoritedByUsers.Any(f => f.UserId == userId)
                 })
                 .ToArrayAsync();
 
@@ -132,13 +137,14 @@
 
             if (id.HasValue)
             {
-                BoardGame? boardGameModel = await this.dbContext
-                    .BoardGames
+                BoardGame? boardGameModel = await boardGameRepository
+                    .All()
                     .Where(g => g.IsDeleted == false)
                     .Include(g => g.BoardGameCategories)
                     .ThenInclude(bgc => bgc.Category)
+                    .Include(g => g.FavoritedByUsers)
                     .AsNoTracking()
-                    .SingleOrDefaultAsync(g => g.Id == id);
+                    .SingleOrDefaultAsync(g => g.Id == id.Value);
 
                 if (boardGameModel != null)
                 {
@@ -152,11 +158,11 @@
                         MinPlayers = boardGameModel.MinPlayers.ToString(),
                         MaxPlayers = boardGameModel.MaxPlayers.ToString(),
                         Duration = boardGameModel.Duration.ToString(),
-                        IsSaved = userId != null ?
-                        boardGameModel.FavoritedByUsers.Any(f => f.UserId == userId) : false,
+                        IsSaved = userId != null && 
+                        boardGameModel.FavoritedByUsers.Any(f => f.UserId == userId),
                         Categories = boardGameModel.BoardGameCategories
-                                         .Select(bc => bc.Category.Name)
-                                         .ToList()
+                                     .Select(bc => bc.Category.Name)
+                                     .ToList()
                     };
                 }
             }
@@ -170,11 +176,11 @@
 
             if (boardGameId != null)
             {
-                BoardGame? deleteBoardGameModel = await this.dbContext
-                    .BoardGames
+                BoardGame? deleteBoardGameModel = await boardGameRepository
+                    .All()
                     .Where(g => g.IsDeleted == false)
                     .AsNoTracking()
-                    .SingleOrDefaultAsync(g => g.Id == boardGameId);
+                    .SingleOrDefaultAsync(g => g.Id == boardGameId.Value);
 
                 if (deleteBoardGameModel != null)
                 {
@@ -196,8 +202,8 @@
 
             if (boardGameId != null)
             {
-                BoardGame? editBoardGameModel = await this.dbContext
-                    .BoardGames
+                BoardGame? editBoardGameModel = await boardGameRepository 
+                    .All()                    
                     .Where(g => g.IsDeleted == false)
                     .Include(g => g.BoardGameCategories)
                     .ThenInclude(bc => bc.Category)
@@ -233,12 +239,12 @@
                 return Enumerable.Empty<FavoritesBoardGameViewModel>();
             }
 
-            IEnumerable<FavoritesBoardGameViewModel> favBoardGames = await this.dbContext
-                .BoardgameUserFavorites
+            IEnumerable<FavoritesBoardGameViewModel> favBoardGames = await favoritesRepository
+                .All()
                 .Include(uf => uf.BoardGame)
                 .ThenInclude(bc => bc.BoardGameCategories)
                 .ThenInclude(c => c.Category)
-                .Where(bc => bc.UserId == userId)
+                .Where(bc => bc.UserId == userId && !bc.BoardGame.IsDeleted)
                 .Select(f => new FavoritesBoardGameViewModel()
                 {
                     Id = f.BoardGameId,
@@ -267,8 +273,8 @@
                 BoardgameUser? user = await this.userManager.FindByIdAsync(userId.Value.ToString());
 
 
-                BoardGame? updatedBoardGame = await this.dbContext
-                    .BoardGames
+                BoardGame? updatedBoardGame = await boardGameRepository
+                    .All()
                     .Include(bg => bg.BoardGameCategories)
                     .FirstOrDefaultAsync(bg => bg.Id == inputModel.Id);
 
@@ -293,7 +299,7 @@
                         });
                     }
 
-                    await this.dbContext.SaveChangesAsync();
+                    await boardGameRepository.SaveChangesAsync();
 
                     opResult = true;
                 }
@@ -311,15 +317,14 @@
                 return false;
             }
 
-            
-            BoardgameUserFavorite? userFavBoardGame = await this.dbContext
-                .BoardgameUserFavorites
-                .SingleOrDefaultAsync(uf => uf.UserId == userId &&
-                                            uf.BoardGameId == boardGameId);
+
+            BoardgameUserFavorite? userFavBoardGame = await this.favoritesRepository
+                    .FirstOrDefaultAsync(uf => uf.UserId == userId && uf.BoardGameId == boardGameId);
+
             if (userFavBoardGame != null)
             {
-                this.dbContext.BoardgameUserFavorites.Remove(userFavBoardGame);
-                await this.dbContext.SaveChangesAsync();
+                this.favoritesRepository.Delete(userFavBoardGame);
+                await this.favoritesRepository.SaveChangesAsync();
 
                 opResult = true;
             }
@@ -337,16 +342,14 @@
                 BoardgameUser? user = await this.userManager.FindByIdAsync(userId.Value.ToString());
 
 
-                BoardGame? deletedBoardGame = await this.dbContext
-                    .BoardGames
-                    .FindAsync(inputModel.Id);
+                BoardGame? deletedBoardGame = await boardGameRepository.GetByIdAsync(inputModel.Id);
 
 
                 if ((user != null) && (deletedBoardGame != null))
                 {
                     deletedBoardGame.IsDeleted = true;
 
-                    await this.dbContext.SaveChangesAsync();
+                    await boardGameRepository.SaveChangesAsync();
 
                     opResult = true;
                 }

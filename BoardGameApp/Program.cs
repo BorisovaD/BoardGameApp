@@ -1,5 +1,7 @@
 using BoardGameApp.Data;
 using BoardGameApp.Data.Models;
+using BoardGameApp.Data.Repository.Interfaces;
+using BoardGameApp.Data.Repository;
 using BoardGameApp.Data.Seeding.Utilities;
 using BoardGameApp.Services.Core;
 using BoardGameApp.Services.Core.Contracts;
@@ -29,7 +31,9 @@ builder.Services.AddDefaultIdentity<BoardgameUser>(options =>
     options.Password.RequireUppercase = false;
 })
     .AddRoles<IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<BoardGameAppDbContext>(); 
+    .AddEntityFrameworkStores<BoardGameAppDbContext>();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 
 builder.Services.AddControllersWithViews();
 
