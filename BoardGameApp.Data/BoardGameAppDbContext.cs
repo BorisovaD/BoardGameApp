@@ -14,6 +14,7 @@ namespace BoardGameApp.Data
         }
 
         public virtual DbSet<BoardgameUser> BoardgameUsers { get; set; } = null!;
+        public virtual DbSet<Manager> Managers { get; set; } = null!;
         public virtual DbSet<City> Cities { get; set; } = null!;
         public virtual DbSet<Club> Clubs { get; set; } = null!;
         public virtual DbSet<BoardGame> BoardGames { get; set; } = null!;
@@ -35,6 +36,12 @@ namespace BoardGameApp.Data
                 entity.Property(t => t.Price)
                       .HasColumnType(PriceType);
             });
+
+            modelBuilder.Entity<Club>()
+                .HasOne<Manager>() 
+                .WithOne(m => m.Club) 
+                .HasForeignKey<Manager>(m => m.ClubId) 
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
