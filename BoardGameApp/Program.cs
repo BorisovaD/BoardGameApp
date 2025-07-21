@@ -7,6 +7,7 @@ using BoardGameApp.Services.Core;
 using BoardGameApp.Services.Core.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using BoardGameApp.Web.Infrastructure.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +72,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+app.UseMiddleware<ManagerAccessMiddleware>();
 app.UseAuthorization();
 
 app.MapControllerRoute(
