@@ -40,6 +40,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IBoardGameService, BoardGameService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IClubService, ClubService>();
 
 var app = builder.Build();
 
@@ -77,6 +78,10 @@ app.UseAuthentication();
 app.UseMiddleware<ManagerAccessMiddleware>();
 app.UseAuthorization();
 
+app.MapControllerRoute(
+    name: "clubs",
+    pattern: "Clubs/{action=Index}/{id?}",
+    defaults: new { controller = "Club" });
 app.MapControllerRoute(
     name: "boardgames",
     pattern: "BoardGames/{action=Index}/{id?}",

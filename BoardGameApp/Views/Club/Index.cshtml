@@ -1,0 +1,69 @@
+﻿@using BoardGameApp.Web.ViewModels.Club
+@model IEnumerable<ClubMapViewModel>
+
+@{
+    ViewData["Title"] = "Clubs";
+}
+
+<h2>Clubs</h2>
+<button id="locateBtn">Find A Club Near Me</button>
+<div id="map" style="height: 700px; width: 100%;"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+        const cityCoordinates = {
+      'Pleven': [43.4170, 24.6064],
+      'Varna': [43.2141, 27.9147],
+      'Stara Zagora': [42.4254, 25.6345],
+      'Ruse': [43.8356, 25.9655],
+      'Sofia': [42.6977, 23.3219],
+      'Dobrich': [43.5671, 27.8270],
+      'Burgas': [42.5048, 27.4626],
+      'Sliven': [42.6854, 26.3292],
+      'Shumen': [43.2700, 26.9220],
+      'Plovdiv': [42.1354, 24.7453]
+    };
+    
+    const clubs = [
+    @foreach (var club in Model)
+    {
+        <text>
+                {
+                    id: '@club.ClubId',
+                    name: '@club.ClubName',
+                    city: '@club.CityName',
+                    coords: cityCoordinates['@club.CityName']
+                },
+        </text>
+    }
+    ];
+
+    const map = L.map('map').setView([42.7, 25.3], 8);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+    }).addTo(map);
+
+    clubs.forEach(club => {
+        if(club.coords) {
+            const marker = L.marker(club.coords).addTo(map);
+            marker.bindPopup(`<b>${club.name}</b><br>${club.city}<br><a href="/Club/Details/${club.id}">View Details</a>`);
+        }
+    });
+
+    document.getElementById('locateBtn').onclick = () => {
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by your browser.');
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(position => {
+            const { latitude, longitude } = position.coords;
+            map.setView([latitude, longitude], 13);
+        }, () => {
+            alert('Unable to retrieve your location.');
+        });
+    };
+</script>
