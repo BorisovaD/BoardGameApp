@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Page Not Found";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg text-center p-4" style="max-width: 500px; background-color: rgba(255,255,255,0.9); border-radius: 1rem;">
+        <h1 class="display-3 fw-bold text-warning">404</h1>
+        <h2 class="mb-3"><b>Page Not Found</b></h2>
+        <h3 class="mb-4">
+            Oops! The page you are looking for might have been removed,<br />
+            had its name changed, or is temporarily unavailable.
+        </h3>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary px-4">
+            🎲 Back to Home
+        </a>
+    </div>
+</div>

@@ -24,13 +24,13 @@
             {
                 if (!(context.User.Identity?.IsAuthenticated ?? false))
                 {
-                    context.Response.Redirect("/Account/AccessDenied");
+                    context.Response.Redirect("/Home/Error?statusCode=403");
                     return;
                 }
 
                 if (!context.User.IsInRole("Manager"))
                 {
-                    context.Response.Redirect("/Account/AccessDenied");
+                    context.Response.Redirect("/Home/Error?statusCode=403");
                     return;
                 }
             }
