@@ -41,6 +41,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IBoardGameService, BoardGameService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IClubService, ClubService>();
+builder.Services.AddScoped<IClubRepository, ClubRepository>();
 
 var app = builder.Build();
 

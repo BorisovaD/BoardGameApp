@@ -14,10 +14,12 @@
     public class ClubService : IClubService
     {
         private readonly IRepository<Club> clubRepository;
+        private readonly IClubRepository clubSRepository;
 
-        public ClubService(IRepository<Club> clubRepository)
+        public ClubService(IRepository<Club> clubRepository, IClubRepository clubSRepository)
         {
             this.clubRepository = clubRepository;
+            this.clubSRepository = clubSRepository;
         }
 
         public async Task<IEnumerable<ClubMapViewModel>> GetAllActiveClubs()
@@ -35,6 +37,31 @@
                 .ToArrayAsync();
 
             return clubs;
+        }
+
+        public async Task<ClubDetailsViewModel?> GetClubDetailsAsync(Guid id)
+        {
+            Club? club = await clubSRepository.GetDetailsByIdAsync(id);
+
+            if (club == null)
+            {
+                return null;
+            }
+
+            return new ClubDetailsViewModel
+            {
+                Id = club.Id,
+                Name = club.Name,
+                Address = club.Address,
+                CityName = club.City.Name,
+                BoardGames = club.ClubBoardGames.Select(cb => new BoardGameInClubViewModel
+                {
+                    Id = cb.BoardGame.Id,
+                    Title = cb.BoardGame.Title,
+                    ImageUrl = cb.BoardGame.ImageUrl
+                })
+                .ToArray()
+            };
         }
     }
 }

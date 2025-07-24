@@ -11,5 +11,7 @@
     public interface IClubService
     {
         Task<IEnumerable<ClubMapViewModel>> GetAllActiveClubs();
+
+        Task<ClubDetailsViewModel> GetClubDetailsAsync(Guid id);
     }
 }

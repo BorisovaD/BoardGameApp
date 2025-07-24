@@ -1,0 +1,43 @@
+﻿@using BoardGameApp.Web.ViewModels.Club
+@model ClubDetailsViewModel
+@{
+    ViewData["Title"] = "Club Details";
+}
+
+<div class="container mt-4">
+    <h2>@Model.Name</h2>
+    <p><i class="fas fa-location-dot me-2"></i><strong>Address:</strong> @Model.Address</p>
+    <p><i class="fas fa-city me-2"></i><strong>City:</strong> @Model.CityName</p>
+    <hr />
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>BoardGames in this Club</h3>
+        <a asp-controller="GameSession" asp-action="ActiveSessions" asp-route-clubId="@Model.Id"
+           class="btn btn-success">
+            View Active GameSessions for this club
+        </a>
+    </div>
+
+    <div class="row">
+        @foreach (var game in Model.BoardGames)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(game.ImageUrl))
+                    {
+                        <img src="@game.ImageUrl" class="card-img-top" style="max-height: 350px; object-fit: cover; padding: 5px;" alt="@game.Title" />
+                    }
+                    else
+                    {
+                        <img src="~/images/default-image.jpg" class="card-img-top" alt="No Image Available" />
+                    }
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@game.Title</h5>
+                        <a asp-controller="BoardGame" asp-action="Details" asp-route-id="@game.Id"
+                           class="btn btn-primary w-100">Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

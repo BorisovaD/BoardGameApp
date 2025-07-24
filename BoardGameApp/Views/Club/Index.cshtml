@@ -5,8 +5,12 @@
     ViewData["Title"] = "Clubs";
 }
 
-<h2>Clubs</h2>
-<button id="locateBtn">Find A Club Near Me</button>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Clubs</h2>
+    <button id="locateBtn" class="btn btn-primary">
+        Find A Club Near Me
+    </button>
+</div>
 <div id="map" style="height: 700px; width: 100%;"></div>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -41,6 +45,13 @@
     }
     ];
 
+    var pawnIcon = L.icon({
+        iconUrl: '/images/locationpawn.png', 
+        iconSize: [40, 40], 
+        iconAnchor: [20, 40], 
+        popupAnchor: [0, -40] 
+    });
+
     const map = L.map('map').setView([42.7, 25.3], 8);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -49,8 +60,9 @@
 
     clubs.forEach(club => {
         if(club.coords) {
-            const marker = L.marker(club.coords).addTo(map);
-            marker.bindPopup(`<b>${club.name}</b><br>${club.city}<br><a href="/Club/Details/${club.id}">View Details</a>`);
+            const marker = L.marker(club.coords, { icon: pawnIcon }).addTo(map);
+            marker.bindPopup(`<b>${club.name}</b><br>${club.city}<br><a href="/Club/Details/${club.id}">View Boardgames</a>`);
+            marker.bindTooltip(club.name);
         }
     });
 
