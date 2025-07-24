@@ -1,0 +1,52 @@
+﻿@using BoardGameApp.Web.ViewModels.GameSession
+@model IEnumerable<GameSessionsViewModel>
+
+<h2 class="mb-4">Active Game Sessions</h2>
+
+<div class="row g-3">
+    @foreach (var session in Model)
+    {
+        var freeSlots = session.MaxPlayers - session.CurrentPlayers;
+        var statusColor = freeSlots <= 0 ? "bg-danger" : "bg-success";
+        <div class="col-12">
+            <div class="card mb-3 flex-row shadow-sm">
+                @if (!string.IsNullOrEmpty(session.ImageUrl))
+                {
+                    <img src="@session.ImageUrl" class="card-img-left" style="width: 150px; object-fit: cover;" alt="@session.BoardGameName" />
+                }
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-1">@session.BoardGameName</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            @session.ClubName – @session.CityName
+                        </h6>
+                        <p class="card-text mb-1">
+                            <strong>Start:</strong> @session.StartTime.ToString("g")<br />
+                            <strong>End:</strong> @session.EndTime.ToString("g")
+                        </p>
+                        <p class="card-text mb-1">
+                            <span class="status-dot @statusColor"></span>
+                            <strong>@session.CurrentPlayers / @session.MaxPlayers</strong> Current players
+                        </p>
+                    </div>
+                    <div>
+                        <a asp-action="Join" asp-route-id="@session.Id" class="btn btn-primary mt-2">
+                            Join a game session
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .status-dot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+</style>
+

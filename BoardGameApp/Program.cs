@@ -35,13 +35,14 @@ builder.Services.AddDefaultIdentity<BoardgameUser>(options =>
     .AddEntityFrameworkStores<BoardGameAppDbContext>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+builder.Services.AddScoped<IClubRepository, ClubRepository>();
 
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IBoardGameService, BoardGameService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IClubService, ClubService>();
-builder.Services.AddScoped<IClubRepository, ClubRepository>();
+builder.Services.AddScoped<IGameSessionService, GameSessionService>();
 
 var app = builder.Build();
 
@@ -79,6 +80,10 @@ app.UseAuthentication();
 app.UseMiddleware<ManagerAccessMiddleware>();
 app.UseAuthorization();
 
+app.MapControllerRoute(
+    name: "gameSessions",
+    pattern: "GameSessions/{action=Index}/{id?}",
+    defaults: new { controller = "GameSession" });
 app.MapControllerRoute(
     name: "clubs",
     pattern: "Clubs/{action=Index}/{id?}",

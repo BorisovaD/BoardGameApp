@@ -16,7 +16,7 @@
 
         public async Task<IActionResult> Index()
         {
-            var activeClubs = await clubService.GetAllActiveClubs();
+            IEnumerable<ClubMapViewModel> activeClubs = await clubService.GetAllActiveClubs();
             return View(activeClubs);
         }
 
