@@ -1,0 +1,34 @@
+﻿@using BoardGameApp.Web.ViewModels.Reservation
+@model IEnumerable<ReservationIndexViewModel>
+
+<h2>All Reservations</h2>
+
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                {
+                    <img src="@item.ImageUrl" class="card-img-top" style="max-height: 150px; object-fit: contain;" alt="@item.BoardGameTitle">
+                }
+                else
+                {
+                    <img src="~/images/default-image.jpg" class="card-img-top" style="max-height: 150px; object-fit: contain;" alt="No Image Available">
+                }
+                <div class="card-body">
+                    <h5 class="card-title">Reservation: @item.ReservationTime.ToString("dd.MM.yyyy HH:mm")</h5>
+                    <p class="card-text">
+                        <strong>User:</strong> @item.UserEmail <br />
+                        <strong>BoardGame:</strong> @item.BoardGameTitle <br />
+                        <strong>Session Start:</strong> @(item.SessionStartTime?.ToString("dd.MM.yyyy HH:mm") ?? "N/A") <br />
+                        <strong>Tickets:</strong> @item.Tickets
+                    </p>
+                    <a asp-controller="Reservation" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">
+                        Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
