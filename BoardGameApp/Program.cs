@@ -44,6 +44,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IClubService, ClubService>();
 builder.Services.AddScoped<IGameSessionService, GameSessionService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 
 var app = builder.Build();
 
@@ -81,6 +82,10 @@ app.UseAuthentication();
 app.UseMiddleware<ManagerAccessMiddleware>();
 app.UseAuthorization();
 
+app.MapControllerRoute(
+    name: "tickets",
+    pattern: "Tickets/{action=Index}/{id?}",
+    defaults: new { controller = "Ticket" });
 app.MapControllerRoute(
     name: "reservations",
     pattern: "Reservations/{action=Index}/{id?}",

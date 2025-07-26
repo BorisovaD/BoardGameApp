@@ -25,5 +25,7 @@
         public string? ImageUrl { get; set; }
 
         public int Tickets { get; set; }
+
+        public Guid TicketId { get; set; }
     }
 }

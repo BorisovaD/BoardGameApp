@@ -1,0 +1,29 @@
+﻿@using BoardGameApp.Web.ViewModels.Ticket
+@model TicketDetailsViewModel
+
+@{
+    ViewData["Title"] = "Ticket Details";
+}
+
+<h2>Ticket Details</h2>
+
+<div class="card shadow-sm mb-3" style="max-width: 30rem;">
+    <img src="~/images/ticket.png" class="card-img-top" alt="Ticket background">
+    <div class="card-body">
+        <h5 class="card-title">@Model.BoardGameTitle</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Issued on: @Model.IssuedOn.ToString("f")</h6>
+        <p class="card-text">
+            <strong>Price:</strong> @($"{Model.Price:F2} лв.")<br />
+            <strong>Quantity:</strong> @Model.Quantity<br />
+            <strong>User:</strong> @Model.UserName<br />
+            <strong>Reservation ID:</strong> @Model.ReservationId<br />
+            <strong>Reservation Time:</strong> @Model.ReservationTime<br />
+            <strong>GameSession ID:</strong> @Model.GameSessionId<br />
+            <strong>Start:</strong> @Model.StartTime<br />
+            <strong>End:</strong> @Model.EndTime<br />
+        </p>        
+        <a asp-controller="Reservation" asp-action="MyReservations" class="btn btn-secondary">
+            Back to My Reservations
+        </a>
+    </div>
+</div>

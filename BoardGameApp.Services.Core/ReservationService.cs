@@ -50,6 +50,8 @@
             return await reservationRepository
                 .All()
                 .Where(r => r.UserId == userId)
+                .Include(r => r.User) 
+                .ThenInclude(u => u.Tickets) 
                 .Include(r => r.GameSession)
                 .ThenInclude(gs => gs.BoardGame)
                 .Select(r => new ReservationIndexViewModel
@@ -62,6 +64,10 @@
                     BoardGameId = r.GameSession.BoardGame.Id,
                     BoardGameTitle = r.GameSession.BoardGame.Title,
                     ImageUrl = r.GameSession.BoardGame.ImageUrl,
+                    TicketId = r.User.Tickets
+                        .Where(t => t.ReservationId == r.Id)
+                        .Select(t => t.Id)
+                        .FirstOrDefault(),
                     Tickets = r.User.Tickets
                         .Where(t => t.ReservationId == r.Id)
                         .Sum(t => t.Quantity)

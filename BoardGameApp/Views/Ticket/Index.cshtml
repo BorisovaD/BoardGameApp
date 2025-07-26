@@ -1,0 +1,47 @@
+﻿@using BoardGameApp.Web.ViewModels.Ticket
+@model IEnumerable<TicketIndexViewModel>
+
+@{
+    ViewData["Title"] = "All Tickets";
+}
+
+<h2>All Tickets</h2>
+
+
+<form method="get" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">User Name</label>
+            <input type="text" name="userName" value="@Context.Request.Query["userName"]" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Board Game</label>
+            <input type="text" name="gameTitle" value="@Context.Request.Query["gameTitle"]" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Issued After</label>
+            <input type="date" name="fromDate" value="@Context.Request.Query["fromDate"]" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </div>
+</form>
+
+<div class="d-flex flex-wrap gap-3">
+    @foreach (var ticket in Model)
+    {
+        <div class="card shadow-sm" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">@ticket.BoardGameTitle</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Issued: @ticket.IssuedOn.ToString("g")</h6>
+                <p class="card-text">
+                    <strong>Price:</strong> @($"{ticket.Price:F2} лв.")<br />
+                    <strong>Quantity:</strong> @ticket.Quantity<br />
+                    <strong>User:</strong> @ticket.UserName
+                </p>
+                <a asp-action="Details" asp-route-id="@ticket.Id" class="btn btn-outline-info btn-sm">Details</a>
+            </div>
+        </div>
+    }
+</div>
