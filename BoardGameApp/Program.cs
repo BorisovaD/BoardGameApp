@@ -8,6 +8,9 @@ using BoardGameApp.Services.Core.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BoardGameApp.Web.Infrastructure.Middlewares;
+using BoardGameApp.Data.Seeding;
+using static BoardGameApp.GCommon.ApplicationConstants;
+using BoardGameApp.GCommon;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +49,15 @@ builder.Services.AddScoped<IGameSessionService, GameSessionService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    RoleSeeder.SeedRoles(services);
+    RoleSeeder.AssignAdminRole(services);
+}
+
 
 using (var scope = app.Services.CreateScope())
 {
@@ -79,9 +90,26 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+
+app.Use((context, next) =>
+{
+    if (context.User.Identity?.IsAuthenticated == true && context.Request.Path == "/")
+    {
+        if (context.User.IsInRole(ApplicationConstants.RoleAdmin))
+        {
+            context.Response.Redirect("/Admin/Home/Index");
+            return Task.CompletedTask;
+        }
+    }
+    return next();
+});
 app.UseMiddleware<ManagerAccessMiddleware>();
+
 app.UseAuthorization();
 
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area}/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute(
     name: "tickets",
     pattern: "Tickets/{action=Index}/{id?}",

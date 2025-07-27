@@ -11,5 +11,9 @@
         public const string AppDateFormat = "dd-MM-yyyy";
         public const string NoImageUrl = "no-image.jpg";
         public const string PriceType = "decimal(18, 6)";
+
+        public const string RoleAdmin = "Admin";
+        public const string RoleManager = "Manager";
+        public const string RoleUser = "User";
     }
 }
