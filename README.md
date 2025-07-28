@@ -28,6 +28,37 @@ The platform allows users to explore clubs, book seats for specific game session
 
 ---
 
+## 🚀 How to Run the Project Locally
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/BorisovaD/BoardGameApp.git
+  
+2. Open the solution in Visual Studio 2022 (or later) or use dotnet CLI.
+
+3. Make sure you have installed:
+
+  - .NET 8 SDK
+
+  - SQL Server (local or remote)
+
+4. Update the connection string in appsettings.json if needed.
+
+5. Apply the migrations to create the database:
+   
+dotnet ef database update
+
+6. Run the project:
+   
+  dotnet run
+
+7. Register a new user account.
+To test Admin/Manager functionality, you can manually assign roles in the database.
+
+8. Enjoy managing your board game club! 🎲
+   
+---
+
 ## 📄 License
 
 This project is licensed under the MIT License.
