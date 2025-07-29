@@ -11,6 +11,8 @@ using BoardGameApp.Web.Infrastructure.Middlewares;
 using BoardGameApp.Data.Seeding;
 using static BoardGameApp.GCommon.ApplicationConstants;
 using BoardGameApp.GCommon;
+using BoardGameApp.Services.Core.Admin.Interfaces;
+using BoardGameApp.Services.Core.Admin;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,8 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IClubRepository, ClubRepository>();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IBoardGameService, BoardGameService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();

@@ -15,5 +15,8 @@
         public const string RoleAdmin = "Admin";
         public const string RoleManager = "Manager";
         public const string RoleUser = "User";
+
+        public const string ErrorMessageKey = "error";
+        public const string SuccessMessageKey = "success";
     }
 }

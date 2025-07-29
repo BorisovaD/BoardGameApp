@@ -20,16 +20,16 @@
             return retRes;
         }
 
-        protected string? GetUserId()
+        protected Guid? GetUserId()
         {
-            string? userId = null;
-            if (this.IsUserAuthenticated())
+            string? userIdString = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (Guid.TryParse(userIdString, out Guid userId))
             {
-                userId = this.User
-                    .FindFirstValue(ClaimTypes.NameIdentifier);
+                return userId;
             }
 
-            return userId;
+            return null;
         }
     }
 }
