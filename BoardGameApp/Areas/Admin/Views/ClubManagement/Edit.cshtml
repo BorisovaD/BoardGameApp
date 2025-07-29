@@ -1,0 +1,50 @@
+﻿@using BoardGameApp.Web.ViewModels.Admin.ClubManagement
+@model ClubManagementEditInputModel
+
+@{
+    ViewData["Title"] = "Edit Club";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary fw-bold">Edit Club</h2>
+    <hr class="mb-4">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post" class="bg-light text-dark p-4 rounded shadow-sm">
+                <input type="hidden" asp-for="Id" /> 
+
+                <div class="mb-3">
+                    <label asp-for="ClubName" class="form-label fw-bold">Club Name</label>
+                    <input asp-for="ClubName" class="form-control" placeholder="Enter club name" />
+                    <span asp-validation-for="ClubName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Address" class="form-label fw-bold">Address</label>
+                    <input asp-for="Address" class="form-control" placeholder="Enter address" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CityName" class="form-label fw-bold">City</label>
+                    <input asp-for="CityName" class="form-control" placeholder="Enter city" />
+                    <span asp-validation-for="CityName" class="text-danger"></span>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary fw-bold px-4">
+                        <i class="bi bi-pencil-square"></i> Update Club
+                    </button>
+                    <a asp-action="Manage" class="btn btn-outline-secondary ms-2">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

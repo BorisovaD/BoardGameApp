@@ -16,6 +16,8 @@
         public const string RoleManager = "Manager";
         public const string RoleUser = "User";
 
+        public const string InfoMessageKey = "info";
+        public const string WarningMessageKey = "warning";
         public const string ErrorMessageKey = "error";
         public const string SuccessMessageKey = "success";
     }

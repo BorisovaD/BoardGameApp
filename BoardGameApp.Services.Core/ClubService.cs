@@ -13,13 +13,13 @@
 
     public class ClubService : IClubService
     {
-        private readonly IRepository<Club> clubRepository;
-        private readonly IClubRepository clubSRepository;
+        protected readonly IRepository<Club> baseRepository;
+        protected readonly IClubRepository clubRepository;
 
-        public ClubService(IRepository<Club> clubRepository, IClubRepository clubSRepository)
+        public ClubService(IRepository<Club> baseRepository, IClubRepository clubRepository)
         {
+            this.baseRepository = baseRepository;
             this.clubRepository = clubRepository;
-            this.clubSRepository = clubSRepository;
         }
 
         public async Task<IEnumerable<ClubMapViewModel>> GetAllActiveClubs()
@@ -41,7 +41,7 @@
 
         public async Task<ClubDetailsViewModel?> GetClubDetailsAsync(Guid id)
         {
-            Club? club = await clubSRepository.GetDetailsByIdAsync(id);
+            Club? club = await clubRepository.GetDetailsByIdAsync(id);
 
             if (club == null)
             {
