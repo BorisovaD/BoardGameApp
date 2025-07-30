@@ -97,17 +97,26 @@ app.UseRouting();
 
 app.UseAuthentication();
 
-app.Use((context, next) =>
+app.Use(async (context, next) =>
 {
-    if (context.User.Identity?.IsAuthenticated == true && context.Request.Path == "/")
+    var user = context.User;
+
+    if (user.Identity?.IsAuthenticated == true && context.Request.Path == "/")
     {
-        if (context.User.IsInRole(ApplicationConstants.RoleAdmin))
+        if (user.IsInRole(ApplicationConstants.RoleAdmin))
         {
             context.Response.Redirect("/Admin/Home/Index");
-            return Task.CompletedTask;
+            return;
+        }
+
+        if (user.IsInRole(ApplicationConstants.RoleManager))
+        {
+            context.Response.Redirect("/Manager/Home/Manage");
+            return;
         }
     }
-    return next();
+
+    await next();
 });
 app.UseMiddleware<ManagerAccessMiddleware>();
 
