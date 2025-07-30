@@ -1,4 +1,4 @@
-﻿namespace BoardGameApp.Web.ViewModels.BoardGame
+﻿namespace BoardGameApp.Web.ViewModels.Admin.BoardGameManagement
 {
     using System;
     using System.Collections.Generic;

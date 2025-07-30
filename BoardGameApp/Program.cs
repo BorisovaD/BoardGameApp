@@ -46,6 +46,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClubManagementService, ClubManagementService>();
+builder.Services.AddScoped<IBoardGameManagementService, BoardGameManagementService>();
 
 builder.Services.AddScoped<IBoardGameService, BoardGameService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();

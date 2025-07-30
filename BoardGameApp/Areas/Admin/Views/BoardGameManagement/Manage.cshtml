@@ -1,0 +1,87 @@
+﻿@using BoardGameApp.Web.ViewModels.Admin.BoardGameManagement
+@model IEnumerable<BoardGameManagementViewModel>
+@{
+    ViewData["Title"] = "Manage Board Games";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4 text-info fw-bold">
+        <i class="bi bi-controller text-info display-4 me-4"></i> Manage BoardGames
+    </h1>
+    <p class="text-center text-muted">Add, edit, or delete board games.</p>
+
+    <div class="d-flex justify-content-between mb-4">
+        <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary fw-bold">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>       
+        <a asp-action="Create" class="btn btn-info fw-bold shadow-sm px-4 py-2 text-white">
+            <i class="bi bi-plus-circle"></i> Add New Game
+        </a>
+    </div>   
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            <i class="bi bi-exclamation-circle"></i> No games available. Click "Add New Game" to create one.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive shadow-sm rounded-4">
+            <table class="table table-hover bg-white rounded-4">
+                <thead class="table-info text-center">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Categories</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col">Min Players</th>
+                        <th scope="col">Max Players</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var game in Model)
+                    {
+                        <tr class="align-middle text-center @(game.IsDeleted ? "table-danger" : "")">
+                            <td class="fw-bold">
+                                @game.Title
+                                @if (game.IsDeleted)
+                                {
+                                    <span class="badge bg-danger ms-2">Deleted</span>
+                                }
+                            </td>
+                            <td>
+                                @string.Join(", ", game.Categories)
+                            </td>
+                            <td>@game.Duration min</td>
+                            <td>@game.MinPlayers</td>
+                            <td>@game.MaxPlayers</td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a asp-action="Edit" asp-route-id="@game.Id" class="btn btn-primary btn-sm fw-bold">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+
+                                    @if (game.IsDeleted)
+                                    {
+                                        <a href="@Url.Action("Restore", "BoardGameManagement", new { area = "Admin", id = game.Id })"
+                                           class="btn btn-warning btn-sm">
+                                            <i class="bi bi-arrow-counterclockwise"></i> Restore
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("Delete", "BoardGameManagement", new { area = "Admin", id = game.Id })"
+                                           class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

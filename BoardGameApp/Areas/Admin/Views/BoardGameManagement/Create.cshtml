@@ -1,7 +1,8 @@
-﻿@using BoardGameApp.Web.ViewModels.BoardGame
-@model EditBoardGameInputModel
+﻿@using BoardGameApp.Web.ViewModels.Admin.BoardGameManagement
+@using BoardGameApp.Web.ViewModels.BoardGame
+@model AddBoardGameInputModel
 @{
-    ViewData["Title"] = "Edit BoardGame";
+    ViewData["Title"] = "Add BoardGame";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
@@ -11,14 +12,13 @@
 
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-        <form asp-controller="BoardGame" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        <form asp-controller="BoardGameManagement" asp-action="Create" method="post">
             <div class="row">
                 <div class="col-sm-6 mb-2">
-                    <input type="hidden" asp-for="@Model.Id" />
                     <label asp-for="@Model.Title" class="form-label-add-edit">BoardGame Title</label>
                     <input asp-for="@Model.Title" class="form-control" aria-required="true" />
                     <span asp-validation-for="@Model.Title" class="text-danger"></span>
-                </div>
+                </div>                
             </div>
 
             <label class="form-label-add-edit">Select Categories</label>
@@ -73,14 +73,9 @@
                 <span asp-validation-for="Duration" class="text-danger"></span>
             </div>
 
-            <div class="mb-2">
-                <a asp-action="Index" class="btn btn-secondary w-100 py-2 fw-bold rounded mt-2">
-                    <i class="fas fa-arrow-left"></i> Cancel
-                </a>
-                <button class="btn btn-warning btn-dark-text w-100 py-2 fw-bold rounded" type="submit">
-                    <i class="fas fa-save"></i> Save
-                </button>
-            </div>
+            <button type="submit" class="btn btn-info w-100 py-2 fw-bold rounded">
+                <i class="fas fa-save"></i> Save
+            </button>
         </form>
     </div>
 </div>

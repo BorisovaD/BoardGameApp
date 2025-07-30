@@ -1,10 +1,10 @@
-﻿namespace BoardGameApp.Services.Core
+﻿namespace BoardGameApp.Services.Core.Admin
 {
     using BoardGameApp.Data;
     using BoardGameApp.Data.Models;
     using BoardGameApp.Data.Repository.Interfaces;
-    using BoardGameApp.Services.Core.Contracts;
-    using BoardGameApp.Web.ViewModels.BoardGame;
+    using BoardGameApp.Services.Core.Admin.Interfaces;
+    using BoardGameApp.Web.ViewModels.Admin.BoardGameManagement;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;

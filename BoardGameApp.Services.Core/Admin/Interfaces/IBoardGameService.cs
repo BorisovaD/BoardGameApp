@@ -1,5 +1,6 @@
-﻿namespace BoardGameApp.Services.Core.Contracts
+﻿namespace BoardGameApp.Services.Core.Admin.Interfaces
 {
+    using BoardGameApp.Web.ViewModels.Admin.BoardGameManagement;
     using BoardGameApp.Web.ViewModels.BoardGame;
     using System;
     using System.Collections.Generic;

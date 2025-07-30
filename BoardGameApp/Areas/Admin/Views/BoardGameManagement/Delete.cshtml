@@ -1,4 +1,5 @@
-﻿@using BoardGameApp.Web.ViewModels.BoardGame
+﻿@using BoardGameApp.Web.ViewModels.Admin.BoardGameManagement
+@using BoardGameApp.Web.ViewModels.BoardGame
 @model DeleteBoardGameInputModel
 @{
     ViewData["Title"] = "Delete BoardGame";
@@ -19,14 +20,14 @@
                 </p>
             </div>
             <div class="card-footer d-flex justify-content-between">
-                <form asp-action="ConfirmDelete" method="post">
+                <form asp-area="Admin" asp-controller="BoardGameManagement"  asp-action="ConfirmDelete" method="post">
                     <input type="hidden" asp-for="Id" />
                     <input type="hidden" asp-for="Title" />
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-trash"></i> Confirm Delete
                     </button>
                 </form>
-                <a asp-controller="BoardGame" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-warning">
+                <a asp-controller="BoardGameManagement" asp-action="Manage" asp-route-id="@Model.Id" class="btn btn-warning">
                     <i class="fas fa-times-circle"></i> Cancel
                 </a>
             </div>

@@ -1,9 +1,10 @@
-﻿namespace BoardGameApp.Services.Core
+﻿namespace BoardGameApp.Services.Core.Admin
 {
     using BoardGameApp.Data;
     using BoardGameApp.Data.Models;
     using BoardGameApp.Data.Repository.Interfaces;
-    using BoardGameApp.Services.Core.Contracts;
+    using BoardGameApp.Services.Core.Admin.Interfaces;
+    using BoardGameApp.Web.ViewModels.Admin.BoardGameManagement;
     using BoardGameApp.Web.ViewModels.BoardGame;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -16,12 +17,12 @@
 
     public class BoardGameService : IBoardGameService
     {
-        private readonly IRepository<BoardGame> boardGameRepository;
-        private readonly IRepository<BoardgameUserFavorite> favoritesRepository;
-        private readonly UserManager<BoardgameUser> userManager;
+        protected readonly IRepository<BoardGame> boardGameRepository;
+        protected readonly IRepository<BoardgameUserFavorite> favoritesRepository;
+        protected readonly UserManager<BoardgameUser> userManager;
         public BoardGameService(IRepository<BoardGame> boardGameRepository, 
-                                IRepository<BoardgameUserFavorite> favoritesRepository,
-                                UserManager<BoardgameUser> userManager)
+                                IRepository<BoardgameUserFavorite> favoritesRepository = null,
+                                UserManager<BoardgameUser> userManager = null)
         {
             this.boardGameRepository = boardGameRepository;
             this.favoritesRepository = favoritesRepository;
@@ -34,10 +35,10 @@
 
             if (userId.HasValue)
             {
-                BoardgameUser? user = await this.userManager.FindByIdAsync(userId.Value.ToString());
+                BoardgameUser? user = await userManager.FindByIdAsync(userId.Value.ToString());
 
 
-                if ((user != null) && inputModel.SelectedCategoryIds.Any())
+                if (user != null && inputModel.SelectedCategoryIds.Any())
                 {
                     BoardGame newBoardGame = new BoardGame()
                     {
@@ -58,8 +59,8 @@
                         });
                     }
 
-                    await this.boardGameRepository.AddAsync(newBoardGame);
-                    await this.boardGameRepository.SaveChangesAsync();
+                    await boardGameRepository.AddAsync(newBoardGame);
+                    await boardGameRepository.SaveChangesAsync();
 
                     opResult = true;
                 }
@@ -77,17 +78,17 @@
                 return false;
             }
 
-            BoardGame? favBoardGame = await this.boardGameRepository.GetByIdAsync(boardGameId);
+            BoardGame? favBoardGame = await boardGameRepository.GetByIdAsync(boardGameId);
 
             if (favBoardGame != null)
             {     
-                BoardgameUserFavorite? userFavBoardGame = await this.favoritesRepository
+                BoardgameUserFavorite? userFavBoardGame = await favoritesRepository
                     .FirstOrDefaultAsync(uf => uf.UserId == userId && uf.BoardGameId == boardGameId);
 
                 if (userFavBoardGame != null)
                 {
-                    await this.favoritesRepository.ReturnExisting(userFavBoardGame);
-                    await this.favoritesRepository.SaveChangesAsync();
+                    await favoritesRepository.ReturnExisting(userFavBoardGame);
+                    await favoritesRepository.SaveChangesAsync();
 
                 }
                 else
@@ -99,8 +100,8 @@
                         BoardGameId = boardGameId
                     };
 
-                    await this.favoritesRepository.AddAsync(newFavorite);
-                    await this.favoritesRepository.SaveChangesAsync();
+                    await favoritesRepository.AddAsync(newFavorite);
+                    await favoritesRepository.SaveChangesAsync();
                 }
 
                 opResult = true;                
@@ -270,7 +271,7 @@
 
             if (userId.HasValue)
             {
-                BoardgameUser? user = await this.userManager.FindByIdAsync(userId.Value.ToString());
+                BoardgameUser? user = await userManager.FindByIdAsync(userId.Value.ToString());
 
 
                 BoardGame? updatedBoardGame = await boardGameRepository
@@ -278,7 +279,7 @@
                     .Include(bg => bg.BoardGameCategories)
                     .FirstOrDefaultAsync(bg => bg.Id == inputModel.Id);
 
-                if ((user != null) && (updatedBoardGame != null))
+                if (user != null && updatedBoardGame != null)
                 {
                     updatedBoardGame.Title = inputModel.Title;
                     updatedBoardGame.Description = inputModel.Description;
@@ -318,13 +319,13 @@
             }
 
 
-            BoardgameUserFavorite? userFavBoardGame = await this.favoritesRepository
+            BoardgameUserFavorite? userFavBoardGame = await favoritesRepository
                     .FirstOrDefaultAsync(uf => uf.UserId == userId && uf.BoardGameId == boardGameId);
 
             if (userFavBoardGame != null)
             {
-                this.favoritesRepository.Delete(userFavBoardGame);
-                await this.favoritesRepository.SaveChangesAsync();
+                favoritesRepository.Delete(userFavBoardGame);
+                await favoritesRepository.SaveChangesAsync();
 
                 opResult = true;
             }
@@ -339,13 +340,13 @@
 
             if (userId.HasValue)
             {
-                BoardgameUser? user = await this.userManager.FindByIdAsync(userId.Value.ToString());
+                BoardgameUser? user = await userManager.FindByIdAsync(userId.Value.ToString());
 
 
                 BoardGame? deletedBoardGame = await boardGameRepository.GetByIdAsync(inputModel.Id);
 
 
-                if ((user != null) && (deletedBoardGame != null))
+                if (user != null && deletedBoardGame != null)
                 {
                     deletedBoardGame.IsDeleted = true;
 
