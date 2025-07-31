@@ -1,0 +1,149 @@
+﻿@using BoardGameApp.Web.ViewModels.Manager.ClubBoardGames
+@model IEnumerable<ClubBoardGamesCatalogViewModel>
+<style>
+    .game-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .game-info {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .game-info img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .game-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .game-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    .game-meta {
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0;
+        right: 0; bottom: 0;
+        background-color: #f44336;
+        transition: 0.4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "✖";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        color: #f44336;
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+        content: "✔";
+        color: #4CAF50;
+    }
+</style>
+
+@foreach (var game in Model)
+{
+    <div class="game-card">
+        <div class="game-info">
+            <img src="@game.ImageUrl" alt="@game.Title" />
+            <div class="game-details">
+                <div class="game-title">@game.Title</div>
+                <div class="game-meta">Players: @game.MinPlayers - @game.MaxPlayers</div>
+                <div class="game-meta">Duration: @game.Duration minutes</div>
+            </div>
+        </div>
+
+        <label class="switch">
+            <input type="checkbox"
+                   checked="@game.IsInClub"
+                   data-game-id="@game.BoardGameId"
+                   data-club-id="@game.ClubId"
+                   onchange="toggleGameInClub(this)">
+            <span class="slider"></span>
+        </label>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        async function toggleGameInClub(checkbox) {
+            const gameId = checkbox.getAttribute('data-game-id');
+            const clubId = checkbox.getAttribute('data-club-id');
+
+            const dto = {
+                gameId: gameId,
+                clubId: clubId
+            };
+
+            try {
+                const response = await fetch('/Manager/ClubBoardGames/Toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dto)
+                });
+
+                if (!response.ok) {
+                    alert("Something went wrong.");
+                    checkbox.checked = !checkbox.checked; 
+                }
+            } catch (err) {
+                alert("Error contacting server.");
+                checkbox.checked = !checkbox.checked;
+            }
+        }
+    </script>
+}

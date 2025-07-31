@@ -13,6 +13,8 @@ using static BoardGameApp.GCommon.ApplicationConstants;
 using BoardGameApp.GCommon;
 using BoardGameApp.Services.Core.Admin.Interfaces;
 using BoardGameApp.Services.Core.Admin;
+using BoardGameApp.Services.Core.Manager.Interfaces;
+using BoardGameApp.Services.Core.Manager;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,9 +49,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClubManagementService, ClubManagementService>();
 builder.Services.AddScoped<IBoardGameManagementService, BoardGameManagementService>();
-
 builder.Services.AddScoped<IBoardGameService, BoardGameService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+builder.Services.AddScoped<ICatalogService, CatalogService>();
+builder.Services.AddScoped<IBoardGameClubService, BoardGameClubService>();
+builder.Services.AddScoped<IBoardGameSessionsService, BoardGameSessionsService>();
+
 builder.Services.AddScoped<IClubService, ClubService>();
 builder.Services.AddScoped<IGameSessionService, GameSessionService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
