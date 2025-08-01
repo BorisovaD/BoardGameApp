@@ -11,6 +11,6 @@
     {
         Task<IEnumerable<ManageGameSessionViewModel>> GetManageViewModelAsync(Guid clubId);
 
-        Task<bool> SaveGameSessionTimeAsync(Guid gameId, int startHour, int endHour);
+        Task<Guid> SaveGameSessionAsync(Guid boardGameId, DateTime startTime, DateTime endTime, Guid organizerId);
     }
 }

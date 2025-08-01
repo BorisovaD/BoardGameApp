@@ -55,11 +55,18 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICatalogService, CatalogService>();
 builder.Services.AddScoped<IBoardGameClubService, BoardGameClubService>();
 builder.Services.AddScoped<IBoardGameSessionsService, BoardGameSessionsService>();
+builder.Services.AddScoped<IGameRankingService, GameRankingService>();
+builder.Services.AddScoped<ITicketReservationService, TicketReservationService>();
 
 builder.Services.AddScoped<IClubService, ClubService>();
 builder.Services.AddScoped<IGameSessionService, GameSessionService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+});
 
 WebApplication app = builder.Build();
 

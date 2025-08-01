@@ -1,0 +1,100 @@
+﻿@using BoardGameApp.Web.ViewModels.Manager.GameRanking
+@model IEnumerable<ManageGameRankingViewModel>
+
+<h2 class="text-center mb-4">Manage Game Rankings</h2>
+
+<div class="ranking-table-wrapper">
+    <table class="ranking-table">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Game</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Draws</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Username</td>
+                    <td>@item.BoardGameTitle</td>
+                    <td>
+                        <input type="number" name="Wins" form="form-@item.Id" value="@item.Wins" min="0" />
+                    </td>
+                    <td>
+                        <input type="number" name="Losses" form="form-@item.Id" value="@item.Losses" min="0" />
+                    </td>
+                    <td>
+                        <input type="number" name="Draws" form="form-@item.Id" value="@item.Draws" min="0" />
+                    </td>
+                    <td>
+                        <form id="form-@item.Id" method="post" asp-action="Update" asp-controller="GameRanking">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="Id" value="@item.Id" />
+                            <button type="submit" class="btn-save">Save</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .ranking-table-wrapper {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .ranking-table {
+        border-collapse: collapse;
+        background-color: #f5faff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 960px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+        .ranking-table th {
+            background-color: white;
+            color: #333;
+            padding: 12px;
+            text-align: left;
+            font-size: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .ranking-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .ranking-table input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: white;
+        }
+
+    .btn-save {
+        background-color: #4e9af1;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-save:hover {
+            background-color: #367cd6;
+        }
+</style>

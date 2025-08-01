@@ -27,7 +27,7 @@
         [Comment("Maximum number of players for the session")]
         public int MaxPlayers { get; set; }
 
-        [Range(1, 100)]
+        [Range(0, 100)]
         [Comment("Number of currently registered players")]
         public int CurrentPlayers { get; set; }
 

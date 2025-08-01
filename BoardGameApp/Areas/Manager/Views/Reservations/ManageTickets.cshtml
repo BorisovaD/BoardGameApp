@@ -1,0 +1,61 @@
+﻿@using BoardGameApp.Web.ViewModels.Manager.Reservations
+@model IEnumerable<GameSessionTicketViewModel>
+
+@{
+    ViewData["Title"] = "Manage Tickets";
+}
+
+<h2 class="mb-4 text-primary">🎟️ Manage Tickets</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">
+       No Sessions available.
+    </div>
+}
+else
+{
+    <table class="table table-hover table-bordered align-middle shadow-sm">
+        <thead class="table-dark text-white">
+            <tr>
+                <th scope="col">🎲 Game Title</th>
+                <th scope="col" class="text-center">👥 Current Players</th>
+                <th scope="col" class="text-center">🎫 Max Tickets</th>
+                <th scope="col" class="text-center">✅ Available</th>
+                <th scope="col" class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var session in Model)
+            {
+                <tr class="@(session.CurrentPlayers == 0 ? "table-success" : "table-secondary")">
+                    @if (session.CurrentPlayers == 0)
+                    {
+                        <form asp-action="UpdateTickets" method="post" class="d-flex align-items-center gap-3">
+                            <input type="hidden" name="GameSessionId" value="@session.GameSessionId" />
+                        <td>@session.GameTitle</td>
+                        <td class="text-center fw-bold">@session.CurrentPlayers</td>
+                        <td class="text-center" style="width: 120px;">
+                            <input type="number" name="MaxPlayers" value="@session.MaxPlayers"
+                                   min="1" max="100" class="form-control form-control-sm text-center" />
+                        </td>
+                        <td class="text-center">@session.AvailableTickets</td>
+                        <td class="text-center">
+                            <button type="submit" class="btn btn-sm btn-outline-warning" title="Save changes">
+                                💾 Save
+                            </button>
+                        </td>
+                        </form>
+                    }
+                    else
+                    {
+                        <td>@session.GameTitle</td>
+                        <td class="text-center fw-bold">@session.CurrentPlayers</td>
+                        <td class="text-center">@session.MaxPlayers</td>
+                        <td class="text-center text-muted fst-italic">Locked</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}

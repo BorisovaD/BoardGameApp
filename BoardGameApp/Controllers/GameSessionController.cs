@@ -16,6 +16,7 @@
         public async Task<IActionResult> Index()
         {
             IEnumerable<GameSessionsViewModel> activeGameSessions = await gameSessionService.GetAllActiveGameSessions();
+            
             return View(activeGameSessions);
         }
     }

@@ -23,7 +23,7 @@
         {
             GameSessionsViewModel[]? sessions = await gameSessionRepository
                 .All()
-                .Where(s => !s.IsDeleted && s.StartTime > DateTime.Now)
+                .Where(s => !s.IsDeleted)
                 .Include(s => s.BoardGame)
                 .Include(s => s.Club)
                 .ThenInclude(c => c.City)

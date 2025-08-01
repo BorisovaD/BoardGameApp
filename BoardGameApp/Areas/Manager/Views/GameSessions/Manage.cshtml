@@ -1,270 +1,183 @@
 ﻿@using BoardGameApp.Web.ViewModels.Manager.GameSessions
 @model IEnumerable<ManageGameSessionViewModel>
 
-@{    
+@{
     var hours = Enumerable.Range(10, 13).ToList(); 
 }
 
-<!DOCTYPE html>
-<html lang="bg">
-<head>
-    <meta charset="utf-8" />
-    <title>Manage Game Sessions</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
+<style>
+    .hour-selection {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        margin-bottom: 10px;
+        background-color: #d7ecff;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .circle-hour {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #eee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        font-weight: bold;
+        border: 2px solid transparent;
+        transition: border 0.2s ease;
+    }
+
+        .circle-hour.selected {
+            border: 2px solid #007bff;
+            background-color: #dbeafe;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+    .pawn {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        top: -35px;
+        transition: left 0.3s ease;
+    }
+
+    .save-button {
+        padding: 8px 14px;
+        background-color: #007bff;
+        border: none;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        .save-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+    }
+
+        table tbody tr td:first-child {
             background-color: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            font-weight: 600; 
+            padding-left: 10px;
         }
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #ccc;
+        text-align: center;
+    }
 
-        th, td {
-            padding: 10px 8px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+</style>
 
-        th {
-            background-color: #4a90e2;
-            color: white;
-            user-select: none;
-        }
+<h1><strong>Manage Game Sessions</strong></h1>
 
-        .slot-circle {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-weight: bold;
-            color: #333;
-            user-select: none;
-        }
-
-            .slot-circle.selected {
-                background-color: #4a90e2;
-                color: white;
-            }
-
-            .slot-circle.in-range {
-                background-color: #7db9e8;
-                color: white;
-            }
-
-        .slot-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            user-select: none;
-            margin: 0 6px;
-        }
-
-        .slot-label {
-            font-size: 11px;
-            color: #666;
-            margin-top: 4px;
-            font-family: monospace;
-        }
-
-        .save-button {
-            padding: 6px 12px;
-            background-color: #4a90e2;
-            border: none;
-            color: white;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            user-select: none;
-        }
-
-            .save-button:hover {
-                background-color: #357abd;
-            }
-
-        .game-title {
-            font-weight: 600;
-            user-select: none;
-        }
-    </style>
-</head>
-<body>
-
-    <h2>Manage Game Sessions</h2>
-
-    <table>
-        <thead>
+<table>
+    <thead>
+        <tr>
+            <th>Game Title</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model)
+        {
+            var gameId = game.BoardGameId;
             <tr>
-                <th>Game Title</th>
-                <th colspan="@hours.Count">Time Slots (10:00 - 22:00)</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var game in Model)
-            {
-                var startSelected = false;
-                var endSelected = false;
-                DateTime? startTime = game.StartTime;
-                DateTime? endTime = game.EndTime;
-                int? startHour = startTime?.Hour;
-                int? endHour = endTime?.Hour;
+                <td><h6><strong>@game.BoardGameTitle</strong></h6></td>
 
-                <tr data-gameid="@game.BoardGameId">
-                    <td class="game-title">@game.BoardGameTitle</td>
-                    <td colspan="@hours.Count">
-                        <div class="slots" style="display:flex; justify-content:center; align-items:flex-start;">
-                            @{
-                                int? selectedStart = null;
-                                int? selectedEnd = null;
-                                if (startHour.HasValue && endHour.HasValue)
-                                {
-                                    selectedStart = startHour.Value;
-                                    selectedEnd = endHour.Value;
-                                    if (selectedStart > selectedEnd)
-                                    {
-                                        var temp = selectedStart;
-                                        selectedStart = selectedEnd;
-                                        selectedEnd = temp;
-                                    }
-                                }
-                            }
-                            @for (int i = 0; i < hours.Count; i++)
-                            {
-                                var hour = hours[i];
-                                var slotId = $"slot-{game.BoardGameId}-{hour}";
-                                var classes = "slot-circle";
-                                if (selectedStart.HasValue && selectedEnd.HasValue)
-                                {
-                                    if (hour == selectedStart)
-                                        classes += " selected";
-                                    else if (hour == selectedEnd)
-                                        classes += " selected";
-                                    else if (hour > selectedStart && hour < selectedEnd)
-                                        classes += " in-range";
-                                }
-                                <div class="slot-wrapper">
-                                    <div class="@classes"
-                                         data-hour="@hour"
-                                         id="@slotId"
-                                         title="@($"{hour}:00")"
-                                         tabindex="0"
-                                         role="button"
-                                         aria-pressed="false">                                        
-                                    </div>
-                                    <div class="slot-label">@($"{hour}:00")</div>
-                                </div>
-                            }
-                        </div>
-                    </td>
-                    <td>
-                        <button class="save-button" type="button" data-gameid="@game.BoardGameId">Save</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <script>
-        (() => {
-            
-            const selections = {};
-
-            function updateRowVisual(gameId) {
-                const row = document.querySelector(`tr[data-gameid='${gameId}']`);
-                if (!row) return;
-                const slots = row.querySelectorAll('.slot-circle');
-                const sel = selections[gameId] || { start: null, end: null };
-
-                slots.forEach(slot => {
-                    const hour = parseInt(slot.dataset.hour);
-                    slot.classList.remove('selected', 'in-range');
-                    if (sel.start !== null && sel.end !== null) {
-                        const start = Math.min(sel.start, sel.end);
-                        const end = Math.max(sel.start, sel.end);
-                        if (hour === start || hour === end) {
-                            slot.classList.add('selected');
-                        } else if (hour > start && hour < end) {
-                            slot.classList.add('in-range');
+                <td>
+                    <div class="hour-selection" id="start-group-@gameId">
+                        <img src="/images/locationpawn.png" class="pawn" style="left:0;" id="pawn-start-@gameId" />
+                        @foreach (var hour in hours)
+                        {
+                            var selected = (game.StartTime?.Hour ?? 10) == hour ? "selected" : "";
+                            <div class="circle-hour @selected" data-gameid="@gameId" data-type="start" data-hour="@hour">
+                                @hour
+                            </div>
                         }
-                    } else if (sel.start !== null && sel.end === null) {
-                        if (hour === sel.start) slot.classList.add('selected');
-                    } else if (sel.end !== null && sel.start === null) {
-                        if (hour === sel.end) slot.classList.add('selected');
-                    }
-                });
-            }
+                    </div>
+                </td>
 
-            function onSlotClick(event) {
-                const slot = event.currentTarget;
-                const row = slot.closest('tr');
-                const gameId = row.getAttribute('data-gameid');
-                if (!selections[gameId]) {
-                    selections[gameId] = { start: null, end: null };
-                }
-                const sel = selections[gameId];
-                const clickedHour = parseInt(slot.dataset.hour);
+                <td>
+                    <div class="hour-selection" id="end-group-@gameId">
+                        <img src="/images/locationpawn.png" class="pawn" style="left:0;" id="pawn-end-@gameId" />
+                        @foreach (var hour in hours)
+                        {
+                            var selected = (game.EndTime?.Hour ?? 22) == hour ? "selected" : "";
+                            <div class="circle-hour @selected" data-gameid="@gameId" data-type="end" data-hour="@hour">
+                                @hour
+                            </div>
+                        }
+                    </div>
+                </td>
 
-                if (sel.start === null) {
-                    sel.start = clickedHour;
-                    sel.end = null;
-                } else if (sel.start !== null && sel.end === null) {
-                    if (clickedHour === sel.start) {
-                        sel.start = null;
-                        sel.end = null;
-                    } else {
-                        sel.end = clickedHour;
-                    }
-                } else {
-                    sel.start = clickedHour;
-                    sel.end = null;
-                }
-                updateRowVisual(gameId);
-            }
+                <td>
+                    <form id="form-@gameId" method="post" asp-controller="GameSessions" asp-action="Save">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="BoardGameId" value="@gameId" />
+                        <input type="hidden" name="StartTime" id="input-start-@gameId" value="@(game.StartTime?.Hour ?? 10)" />
+                        <input type="hidden" name="EndTime" id="input-end-@gameId" value="@(game.EndTime?.Hour ?? 22)" />
+                        <button class="save-button" type="submit">💾 Save</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-            function onSaveClick(event) {
-                const button = event.currentTarget;
-                const gameId = button.getAttribute('data-gameid');
-                const sel = selections[gameId];
+<script>
+    document.querySelectorAll(".circle-hour").forEach(circle => {
+        circle.addEventListener("click", function () {
+            const hour = this.dataset.hour;
+            const gameId = this.dataset.gameid;
+            const type = this.dataset.type;
 
-                if (!sel || sel.start === null || sel.end === null) {
-                    alert('Моля, избери начален и краен час преди да запазиш.');
-                    return;
-                }
+            
+            const inputId = `input-${type}-${gameId}`;
+            document.getElementById(inputId).value = hour;
 
-                const start = Math.min(sel.start, sel.end);
-                const end = Math.max(sel.start, sel.end);
+            
+            const pawn = document.getElementById(`pawn-${type}-${gameId}`);
+            const parent = this.parentElement;
+            const rect = this.getBoundingClientRect();
+            const parentRect = parent.getBoundingClientRect();
+            const offsetLeft = rect.left - parentRect.left;
+            pawn.style.left = `${offsetLeft}px`;
 
+            
+            parent.querySelectorAll(".circle-hour").forEach(c => c.classList.remove("selected"));
+            this.classList.add("selected");
+        });
+    });
 
-                alert(`GameId: ${gameId}\nStartTime: ${start}:00\nEndTime: ${end}:00`);
-
-            }
-
-            document.querySelectorAll('.slot-circle').forEach(slot => {
-                slot.addEventListener('click', onSlotClick);
-                slot.addEventListener('keydown', e => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        slot.click();
-                    }
-                });
-            });
-
-            document.querySelectorAll('.save-button').forEach(btn => {
-                btn.addEventListener('click', onSaveClick);
-            });
-        })();
-    </script>
-
-</body>
-</html>
+    
+    window.addEventListener("load", () => {
+        document.querySelectorAll(".circle-hour.selected").forEach(circle => {
+            const gameId = circle.dataset.gameid;
+            const type = circle.dataset.type;
+            const pawn = document.getElementById(`pawn-${type}-${gameId}`);
+            const parent = circle.parentElement;
+            const rect = circle.getBoundingClientRect();
+            const parentRect = parent.getBoundingClientRect();
+            const offsetLeft = rect.left - parentRect.left;
+            pawn.style.left = `${offsetLeft}px`;
+        });
+    });
+</script>

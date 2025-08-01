@@ -49,34 +49,54 @@
             return result;
         }
 
-        public async Task<bool> SaveGameSessionTimeAsync(Guid gameId, int startHour, int endHour)
-        {
-            System.DateTime today = DateTime.Today;
-            System.DateTime startTime = today.AddHours(startHour);
-            System.DateTime endTime = today.AddHours(endHour);
+        public async Task<Guid> SaveGameSessionAsync(Guid boardGameId, DateTime startTime, DateTime endTime, Guid organizerId)
+        {            
+            ClubBoardGame? clubBoardGame = await this.clubBoardGameRepository
+                .All()
+                .Where(cb => cb.IsDeleted == false)
+                .Include(cb => cb.BoardGame) 
+                .FirstOrDefaultAsync(cb => cb.BoardGameId == boardGameId);
 
-            GameSession? session = await gameSessionRepository.FirstOrDefaultAsync(s => s.BoardGameId == gameId);
-
-            if (session == null)
+            if (clubBoardGame == null || clubBoardGame.BoardGame == null)
             {
-                session = new GameSession
-                {
-                    BoardGameId = gameId,
-                    StartTime = startTime,
-                    EndTime = endTime
-                };
+                throw new InvalidOperationException("Game not found in club or game data missing.");
+            }
 
-                await gameSessionRepository.AddAsync(session);
+            GameSession? existingSession = await this.gameSessionRepository
+                .All()
+                .FirstOrDefaultAsync(s => s.BoardGameId == boardGameId && s.ClubId == clubBoardGame.ClubId && s.IsDeleted == false);
+
+            if (existingSession != null)
+            {
+                existingSession.StartTime = startTime;
+                existingSession.EndTime = endTime;
+                existingSession.IsDeleted = false;
+
+                this.gameSessionRepository.Update(existingSession);
+                await this.gameSessionRepository.SaveChangesAsync();
+
+                return existingSession.Id;
             }
             else
             {
-                session.StartTime = startTime;
-                session.EndTime = endTime;
-            }
+                var newSession = new GameSession
+                {
+                    Id = Guid.NewGuid(),
+                    BoardGameId = boardGameId,
+                    ClubId = clubBoardGame.ClubId,
+                    StartTime = startTime,
+                    EndTime = endTime,
+                    OrganizerId = organizerId,
+                    MaxPlayers = clubBoardGame.BoardGame.MaxPlayers,
+                    CurrentPlayers = 0,
+                    IsDeleted = false,
+                };
 
-            await gameSessionRepository.SaveChangesAsync(); 
+                await this.gameSessionRepository.AddAsync(newSession);
+                await this.gameSessionRepository.SaveChangesAsync();
 
-            return true;
-        }
+                return newSession.Id;
+            }            
+        }        
     }
 }

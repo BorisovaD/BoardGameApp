@@ -1,5 +1,6 @@
 ﻿@using BoardGameApp.Web.ViewModels.Club
 @model ClubDetailsViewModel
+
 @{
     ViewData["Title"] = "Club Details";
 }
@@ -11,10 +12,10 @@
     <hr />
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>BoardGames in this Club</h3>
+        <h3>🎲 BoardGames in this Club</h3>
         <a asp-controller="GameSession" asp-action="ActiveSessions" asp-route-clubId="@Model.Id"
-           class="btn btn-success">
-            View Active GameSessions for this club
+           class="btn btn-outline-success">
+            🕹️ View Active GameSessions
         </a>
     </div>
 
@@ -22,19 +23,36 @@
         @foreach (var game in Model.BoardGames)
         {
             <div class="col-md-4 mb-4">
-                <div class="card h-100">
+                <div class="card h-100 shadow-sm border-0">
                     @if (!string.IsNullOrEmpty(game.ImageUrl))
                     {
-                        <img src="@game.ImageUrl" class="card-img-top" style="max-height: 350px; object-fit: cover; padding: 5px;" alt="@game.Title" />
+                        <img src="@game.ImageUrl" class="card-img-top rounded-top" style="max-height: 350px; object-fit: cover;" alt="@game.Title" />
                     }
                     else
                     {
-                        <img src="~/images/default-image.jpg" class="card-img-top" alt="No Image Available" />
+                        <img src="~/images/default-image.jpg" class="card-img-top rounded-top" alt="No Image Available" />
                     }
                     <div class="card-body text-center">
                         <h5 class="card-title">@game.Title</h5>
-                        <a asp-controller="BoardGame" asp-action="Details" asp-route-id="@game.Id"
-                           class="btn btn-primary w-100">Details</a>
+
+                        <div class="d-grid gap-2">
+                            <a asp-controller="BoardGame" asp-action="Details" asp-route-id="@game.Id"
+                               class="btn btn-outline-primary">
+                                📘 Details
+                            </a>
+
+                            @if (game.ActiveGameSessionId != null)
+                            {
+                                <a asp-controller="Tickets" asp-action="Buy" asp-route-id="@game.ActiveGameSessionId"
+                                   class="btn btn-success">
+                                    🎟️ Buy Ticket
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary" disabled>❌ No Active Session</button>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

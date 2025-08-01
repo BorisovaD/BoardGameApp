@@ -31,18 +31,45 @@
 
             return View(model);
         }
-
+              
         [HttpPost]
-        public async Task<IActionResult> SaveGameSessionTime(Guid gameId, int startHour, int endHour)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Save(GameSessionInputModel model)
         {
-            var success = await boardGameSessionsService.SaveGameSessionTimeAsync(gameId, startHour, endHour);
+            var startDateTime = DateTime.Today.AddHours(model.StartTime);
+            var endDateTime = DateTime.Today.AddHours(model.EndTime);
 
-            if (!success)
+            try
             {
-                return BadRequest("Could not be saved.");
-            }
+                var organizerId = this.GetUserId();
 
-            return Ok("Saved successfully!");
+                if (!organizerId.HasValue)
+                {
+                    Console.WriteLine("Organizer ID not found. User may not be logged in.");
+                    return Unauthorized(); 
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    Console.WriteLine("Model state is invalid.");
+                    return BadRequest("Invalid input.");
+                }
+
+                Console.WriteLine($"Saving session for user {organizerId.Value}, GameId: {model.BoardGameId}");
+
+                Guid sessionId = await this.boardGameSessionsService.SaveGameSessionAsync(
+                    model.BoardGameId,
+                    startDateTime,
+                    endDateTime,
+                    organizerId.Value);
+                                
+                return RedirectToAction("Index", "GameSession", new { id = sessionId, area = "" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception while saving session: " + ex.Message);
+                return StatusCode(500, "An error occurred while saving the game session.");
+            }
         }
     }
 }

@@ -61,16 +61,7 @@
                             <i class="fas fa-heart"></i> Add to Favorites
                         </button>
                     </form>
-                }
-                @*@if (Model.IsAuthor) { }*@
-                
-                <a asp-controller="BoardGame" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary d-flex justify-content-center align-items-center flex-fill mx-1">
-                    <i class="fas fa-edit"></i> Edit
-                </a>
-                <a asp-controller="BoardGame" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger d-flex justify-content-center align-items-center flex-fill mx-1">
-                    <i class="fas fa-trash"></i> Delete
-                </a>
-                
+                }      
             </div>
         </div>
     </div>

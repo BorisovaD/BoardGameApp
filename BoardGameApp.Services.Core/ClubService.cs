@@ -15,11 +15,13 @@
     {
         protected readonly IRepository<Club> baseRepository;
         protected readonly IClubRepository clubRepository;
+        protected readonly IRepository<GameSession> gameSessionrepository;
 
-        public ClubService(IRepository<Club> baseRepository, IClubRepository clubRepository)
+        public ClubService(IRepository<Club> baseRepository, IClubRepository clubRepository, IRepository<GameSession> gameSessionrepository)
         {
             this.baseRepository = baseRepository;
             this.clubRepository = clubRepository;
+            this.gameSessionrepository = gameSessionrepository;
         }
 
         public async Task<IEnumerable<ClubMapViewModel>> GetAllActiveClubs()
@@ -48,6 +50,13 @@
                 return null;
             }
 
+            var ActiveGameSessionId = gameSessionrepository
+                .All()
+                .Where(gs => !gs.IsDeleted && gs.StartTime > DateTime.Now)
+                .OrderBy(gs => gs.StartTime)
+                .Select(gs => gs.Id)
+                .FirstOrDefault();
+
             return new ClubDetailsViewModel
             {
                 Id = club.Id,
@@ -58,7 +67,8 @@
                 {
                     Id = cb.BoardGame.Id,
                     Title = cb.BoardGame.Title,
-                    ImageUrl = cb.BoardGame.ImageUrl
+                    ImageUrl = cb.BoardGame.ImageUrl,
+                    ActiveGameSessionId = ActiveGameSessionId
                 })
                 .ToArray()
             };

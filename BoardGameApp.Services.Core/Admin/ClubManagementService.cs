@@ -19,8 +19,8 @@
         private readonly UserManager<BoardgameUser> userManager;
         private readonly IRepository<City> cityRepository;
 
-        public ClubManagementService(IRepository<Club> baseRepository, IClubRepository clubRepository,
-        IRepository<Manager> managerRepository, UserManager<BoardgameUser> userManager, IRepository<City> cityRepository) : base(baseRepository, clubRepository)
+        public ClubManagementService(IRepository<GameSession> gameSessionRepository,IRepository<Club> baseRepository, IClubRepository clubRepository,
+        IRepository<Manager> managerRepository, UserManager<BoardgameUser> userManager, IRepository<City> cityRepository) : base(baseRepository, clubRepository, gameSessionRepository)
         {
             this.managerRepository = managerRepository;
             this.userManager = userManager;
