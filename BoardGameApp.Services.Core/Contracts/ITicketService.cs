@@ -14,5 +14,9 @@
         Task<IEnumerable<TicketIndexViewModel>> GetAllTickets();
 
         Task<TicketDetailsViewModel> GetTicketDetailsAsync(Guid? id, Guid? userId);
+
+        Task<BuyTicketViewModel> GetTicketInfoAsync(Guid gameSessionId);
+
+        Task<bool> BuyTicketAsync(Guid userId, Guid gameSessionId, int ticketsToBuy);
     }
 }

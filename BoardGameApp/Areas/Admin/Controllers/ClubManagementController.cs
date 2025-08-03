@@ -2,8 +2,12 @@
 {
     using BoardGameApp.Services.Core.Admin.Interfaces;
     using BoardGameApp.Web.ViewModels.Admin.ClubManagement;
+    using BoardGameApp.Web.ViewModels.BoardGame;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using static BoardGameApp.GCommon.ApplicationConstants;
+
+    [Authorize(Roles = RoleAdmin)]
     public class ClubManagementController : BaseAdminController
     {
         private readonly IClubManagementService clubManagementService;
@@ -18,17 +22,36 @@
         [HttpGet]
         public async Task<IActionResult> Manage()
         {
-            IEnumerable<ClubManagementIndexViewModel> allClubs = await this.clubManagementService
+            try
+            {
+                IEnumerable<ClubManagementIndexViewModel> allClubs = await this.clubManagementService
                 .GetClubManagementInfoAsync();
 
-            return View(allClubs);
+                return View(allClubs);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Manage));
+            }
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            var viewModel = new ClubManagementCreateInputModel();
-            return View(viewModel);
+            try
+            {
+                var viewModel = new ClubManagementCreateInputModel();
+
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Manage));
+            }
         }
 
         [HttpPost]
@@ -67,17 +90,26 @@
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            ClubManagementEditInputModel? editFormModel = await this.clubManagementService
-                .GetClubForEditingAsync(id);
-            
-            if (editFormModel == null)
+            try
             {
-                TempData[ErrorMessageKey] = "Selected Club does not exist!";
+                ClubManagementEditInputModel? editFormModel = await this.clubManagementService
+                .GetClubForEditingAsync(id);
+
+                if (editFormModel == null)
+                {
+                    TempData[ErrorMessageKey] = "Selected Club does not exist!";
+
+                    return this.RedirectToAction(nameof(Manage));
+                }
+
+                return this.View(editFormModel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
 
                 return this.RedirectToAction(nameof(Manage));
-            }                       
-
-            return this.View(editFormModel);
+            }
         }
 
         [HttpPost]
@@ -116,22 +148,31 @@
         [HttpPost]
         public async Task<IActionResult> ToggleDelete(Guid id)
         {
-            var (success, isNowDeleted) = await this.clubManagementService.ToggleClubDeletionAsync(id);
+            try
+            {
+                var (success, isNowDeleted) = await this.clubManagementService.ToggleClubDeletionAsync(id);
 
-            if (!success)
-            {
-                TempData["ErrorMessage"] = "Club not found!";
-            }
-            else if (isNowDeleted)
-            {
-                TempData["WarningMessage"] = "Club was successfully deleted.";
-            }
-            else
-            {
-                TempData["SuccessMessage"] = "Club was restored successfully.";
-            }
+                if (!success)
+                {
+                    TempData["ErrorMessage"] = "Club not found!";
+                }
+                else if (isNowDeleted)
+                {
+                    TempData["WarningMessage"] = "Club was successfully deleted.";
+                }
+                else
+                {
+                    TempData["SuccessMessage"] = "Club was restored successfully.";
+                }
 
-            return RedirectToAction(nameof(Manage));
+                return RedirectToAction(nameof(Manage));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Manage));
+            }
         }
     }
 }

@@ -23,6 +23,7 @@
                 .Include(c => c.City)
                 .Include(c => c.ClubBoardGames)
                     .ThenInclude(cb => cb.BoardGame)
+                        .ThenInclude(bg => bg.GameSessions)
                 .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
         }
     }

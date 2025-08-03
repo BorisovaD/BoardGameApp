@@ -5,9 +5,12 @@
     using BoardGameApp.Services.Core.Manager;
     using BoardGameApp.Services.Core.Manager.Interfaces;
     using BoardGameApp.Web.ViewModels.Manager.GameSessions;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using static BoardGameApp.GCommon.ApplicationConstants;
 
     [Area("Manager")]
+    [Authorize(Roles = RoleManager)]
     public class GameSessionsController : BaseController
     {
         private readonly IBoardGameSessionsService boardGameSessionsService;
@@ -19,17 +22,25 @@
         }
         public async Task<IActionResult> Manage()
         {
-            var managerId = this.GetUserId();
-            var clubId = await catalogService.GetClubIdByManagerIdAsync(managerId);
-
-            if (clubId == null)
+            try
             {
-                return NotFound();
+                var managerId = this.GetUserId();
+                var clubId = await catalogService.GetClubIdByManagerIdAsync(managerId);
+
+                if (clubId == null)
+                {
+                    return NotFound();
+                }
+
+                IEnumerable<ManageGameSessionViewModel> model = await boardGameSessionsService.GetManageViewModelAsync(clubId.Value);
+
+                return View(model);
             }
-
-            IEnumerable<ManageGameSessionViewModel> model = await boardGameSessionsService.GetManageViewModelAsync(clubId.Value);
-
-            return View(model);
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return this.RedirectToAction(nameof(Manage));
+            }
         }
               
         [HttpPost]

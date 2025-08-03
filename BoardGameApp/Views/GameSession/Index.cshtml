@@ -59,9 +59,9 @@
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-end">
-                        <a asp-action="Join" asp-route-id="@session.Id" class="btn btn-primary mt-2">
-                            Join a game session
-                        </a>                        
+                        <a asp-controller="Ticket" asp-action="Buy" asp-route-gameSessionId="@session.Id" class="btn btn-primary mt-2">
+                            Buy Ticket
+                        </a>
                         <div class="d-flex align-items-center justify-content-end gap-1 mt-2">
                             @for (int i = 1; i <= session.MaxPlayers; i++)
                             {

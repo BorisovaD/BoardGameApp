@@ -8,7 +8,9 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
     using NuGet.Protocol.Core.Types;
+    using static BoardGameApp.GCommon.ApplicationConstants;
 
+    [Authorize(Roles = RoleAdmin)]
     public class BoardGameManagementController : BaseAdminController
     {
         private readonly IRepository<BoardGame> boardGameRepository;
@@ -22,13 +24,23 @@
             this.boardGameService = boardGameService;
             this.categoryService = categoryService;
         }
+
         [HttpGet]
         public async Task<IActionResult> Manage()
         {
-            IEnumerable<BoardGameManagementViewModel> allBoardGames = await this.boardGameManagementService
+            try
+            {
+                IEnumerable<BoardGameManagementViewModel> allBoardGames = await this.boardGameManagementService
                 .GetBoardGamesManagementInfoAsync();
 
-            return View(allBoardGames);
+                return View(allBoardGames);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
         }
 
         [HttpGet]
@@ -191,17 +203,25 @@
         [HttpGet]
         public async Task<IActionResult> Restore(Guid id)
         {
-            BoardGame? game = await boardGameRepository.GetByIdAsync(id);
-
-            if (game == null)
+            try
             {
-                return NotFound();
+                BoardGame? game = await boardGameRepository.GetByIdAsync(id);
+
+                if (game == null)
+                {
+                    return NotFound();
+                }
+
+                await boardGameRepository.ReturnExisting(game);
+                await boardGameRepository.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Manage));
             }
-
-            await boardGameRepository.ReturnExisting(game);
-            await boardGameRepository.SaveChangesAsync(); 
-
-            return RedirectToAction(nameof(Manage));
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return this.RedirectToAction(nameof(Manage));
+            }
         }
     }
 }

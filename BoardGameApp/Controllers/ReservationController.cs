@@ -8,6 +8,8 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
 
+
+    [Authorize]
     public class ReservationController : BaseController
     {
         private readonly IReservationService reservationService;
@@ -15,19 +17,40 @@
         {
             this.reservationService = reservationService;
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> Index()
-        {
-            IEnumerable<ReservationIndexViewModel> activeReservations = await reservationService.GetAllActiveReservations();
-            return View(activeReservations);
+        {            
+            try
+            {
+                IEnumerable<ReservationIndexViewModel> activeReservations = await reservationService.GetAllActiveReservations();
+                return View(activeReservations);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
         }
-
-        [Authorize]
+                
+        [HttpGet]
         public async Task<IActionResult> MyReservations()
-        {
-            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        {            
+            try
+            {
+                Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            IEnumerable<ReservationIndexViewModel> model = await reservationService.GetMyReservationsAsync(userId);
-            return View(model);
+                IEnumerable<ReservationIndexViewModel> model = await reservationService.GetMyReservationsAsync(userId);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
         }
     }
 }

@@ -2,8 +2,12 @@
 {
     using BoardGameApp.Services.Core.Admin.Interfaces;
     using BoardGameApp.Web.ViewModels.Admin.UserManagement;
+    using BoardGameApp.Web.ViewModels.BoardGame;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using static BoardGameApp.GCommon.ApplicationConstants;
+
+    [Authorize(Roles = RoleAdmin)]
     public class UserManagementController : BaseAdminController
     {
         private readonly IUserService userService;
@@ -16,17 +20,26 @@
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            Guid? userId = this.GetUserId();
-
-            if (userId == null)
+            try
             {
-                return NotFound(); 
+                Guid? userId = this.GetUserId();
+
+                if (userId == null)
+                {
+                    return NotFound();
+                }
+
+                IEnumerable<UserManagementIndexViewModel> allUsers =
+                    await this.userService.GetUserManagementInfoAsync(userId.Value);
+
+                return View(allUsers);
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
 
-            IEnumerable<UserManagementIndexViewModel> allUsers =
-                await this.userService.GetUserManagementInfoAsync(userId.Value);
-
-            return View(allUsers);
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
         }
 
         [HttpPost]

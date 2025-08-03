@@ -38,6 +38,7 @@
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid? id)
         {
             try
@@ -60,6 +61,7 @@
         }
         
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Favorites()
         {
             try
@@ -83,6 +85,7 @@
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddToFavorites(Guid? id)
         {
             try
@@ -111,6 +114,7 @@
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> RemoveFromFavorites(Guid? id)
         {
             try

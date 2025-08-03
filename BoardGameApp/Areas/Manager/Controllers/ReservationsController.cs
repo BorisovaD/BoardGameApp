@@ -5,10 +5,13 @@
     using BoardGameApp.Data.Repository.Interfaces;
     using BoardGameApp.Services.Core.Manager.Interfaces;
     using BoardGameApp.Web.ViewModels.Manager.Reservations;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using static BoardGameApp.GCommon.ApplicationConstants;
 
     [Area("Manager")]
+    [Authorize(Roles = RoleManager)]
     public class ReservationsController : BaseController
     {
         private readonly ITicketReservationService ticketService;
@@ -23,40 +26,58 @@
         [HttpGet]
         public async Task<IActionResult> ManageTickets()
         {
-            IEnumerable<GameSession> sessions = await gameSessionRepository
-                .All() 
+            try
+            {
+                IEnumerable<GameSession> sessions = await gameSessionRepository
+                .All()
                 .Include(s => s.BoardGame)
                 .Where(s => !s.IsDeleted)
                 .ToListAsync();
 
-            IEnumerable<GameSessionTicketViewModel> model = sessions                
-                .Select(s => new GameSessionTicketViewModel
-                {
-                    GameSessionId = s.Id,
-                    GameTitle = s.BoardGame.Title,  
-                    CurrentPlayers = s.CurrentPlayers,
-                    MaxPlayers = s.MaxPlayers
-                })
-                .ToList();
+                IEnumerable<GameSessionTicketViewModel> model = sessions
+                    .Select(s => new GameSessionTicketViewModel
+                    {
+                        GameSessionId = s.Id,
+                        GameTitle = s.BoardGame.Title,
+                        CurrentPlayers = s.CurrentPlayers,
+                        MaxPlayers = s.MaxPlayers
+                    })
+                    .ToList();
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateTickets(Guid gameSessionId, int maxPlayers)
         {
-            var success = await ticketService.UpdateMaxPlayersAsync(gameSessionId, maxPlayers);
-
-            if (!success)
+            try
             {
-                TempData["Error"] = "Cannot update tickets. Session may already have players or is invalid.";
-            }
-            else
-            {
-                TempData["Success"] = "Tickets updated successfully.";
-            }
+                var success = await ticketService.UpdateMaxPlayersAsync(gameSessionId, maxPlayers);
 
-            return RedirectToAction(nameof(ManageTickets));
+                if (!success)
+                {
+                    TempData["Error"] = "Cannot update tickets. Session may already have players or is invalid.";
+                }
+                else
+                {
+                    TempData["Success"] = "Tickets updated successfully.";
+                }
+
+                return RedirectToAction(nameof(ManageTickets));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
         }
     }
 }

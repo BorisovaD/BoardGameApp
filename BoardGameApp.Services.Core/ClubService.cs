@@ -50,27 +50,27 @@
                 return null;
             }
 
-            var ActiveGameSessionId = gameSessionrepository
-                .All()
-                .Where(gs => !gs.IsDeleted && gs.StartTime > DateTime.Now)
-                .OrderBy(gs => gs.StartTime)
-                .Select(gs => gs.Id)
-                .FirstOrDefault();
-
             return new ClubDetailsViewModel
             {
                 Id = club.Id,
                 Name = club.Name,
                 Address = club.Address,
                 CityName = club.City.Name,
-                BoardGames = club.ClubBoardGames.Select(cb => new BoardGameInClubViewModel
+                BoardGames = club.ClubBoardGames.Select(cb =>
                 {
-                    Id = cb.BoardGame.Id,
-                    Title = cb.BoardGame.Title,
-                    ImageUrl = cb.BoardGame.ImageUrl,
-                    ActiveGameSessionId = ActiveGameSessionId
-                })
-                .ToArray()
+                    var activeSession = cb.BoardGame.GameSessions
+                        .Where(gs => gs.ClubId == club.Id && !gs.IsDeleted)
+                        .OrderBy(gs => gs.StartTime)
+                        .FirstOrDefault();
+
+                    return new BoardGameInClubViewModel
+                    {
+                        Id = cb.BoardGame.Id,
+                        Title = cb.BoardGame.Title,
+                        ImageUrl = cb.BoardGame.ImageUrl,
+                        ActiveGameSessionId = activeSession?.Id
+                    };
+                }).ToArray()
             };
         }
     }
