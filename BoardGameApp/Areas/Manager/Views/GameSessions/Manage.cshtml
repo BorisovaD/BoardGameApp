@@ -85,7 +85,11 @@
 </style>
 
 <h1><strong>Manage Game Sessions</strong></h1>
-
+<div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+    <a asp-action="Create" asp-controller="GameSessions" class="btn btn-success">
+        ➕ Add new GameSession
+    </a>
+</div>
 <table>
     <thead>
         <tr>
@@ -126,9 +130,16 @@
                             </div>
                         }
                     </div>
-                </td>
-
+                </td>                
                 <td>
+                    <a asp-area="Manager"
+                       asp-controller="GameSessions"
+                       asp-action="Edit"
+                       asp-route-id="@game.Id"
+                       class="btn btn-secondary"
+                       style="margin-top: 5px;">
+                        ✏️ Edit
+                    </a>
                     <form id="form-@gameId" method="post" asp-controller="GameSessions" asp-action="Save">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="BoardGameId" value="@gameId" />

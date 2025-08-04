@@ -8,6 +8,7 @@
 
     public class ManageGameSessionViewModel
     {
+        public Guid Id { get; set; }
         public Guid ClubId { get; set; }
 
         public Guid BoardGameId { get; set; }
@@ -17,5 +18,7 @@
         public DateTime? StartTime { get; set; }
 
         public DateTime? EndTime { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace BoardGameApp.Areas.Manager.Controllers
 {
     using BoardGameApp.Controllers;
+    using BoardGameApp.Services.Core;
     using BoardGameApp.Services.Core.Contracts;
     using BoardGameApp.Services.Core.Manager;
     using BoardGameApp.Services.Core.Manager.Interfaces;
@@ -72,7 +73,8 @@
                     model.BoardGameId,
                     startDateTime,
                     endDateTime,
-                    organizerId.Value);
+                    organizerId.Value,
+                    model.IsActive);
                                 
                 return RedirectToAction("Index", "GameSession", new { id = sessionId, area = "" });
             }
@@ -80,6 +82,103 @@
             {
                 Console.WriteLine("Exception while saving session: " + ex.Message);
                 return StatusCode(500, "An error occurred while saving the game session.");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {            
+            try
+            {
+                var model = new AddGameSessionViewModel
+                {
+                    AvailableBoardGames = await boardGameSessionsService.GetAllBoardGamesAsync(),
+                    AvailableClubs = await boardGameSessionsService.GetAllClubsAsync()
+                };
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return this.RedirectToAction(nameof(Manage));
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(AddGameSessionViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    model.AvailableBoardGames = await boardGameSessionsService.GetAllBoardGamesAsync();
+                    model.AvailableClubs = await boardGameSessionsService.GetAllClubsAsync();
+                    return View(model);
+                }
+
+                var organizerId = this.GetUserId();
+                if (!organizerId.HasValue)
+                {
+                    return Unauthorized();
+                }
+
+                var sessionId = await boardGameSessionsService.AddGameSessionAsync(model, organizerId.Value);
+                return RedirectToAction("Manage", "GameSessions", new { area = "", id = sessionId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return this.RedirectToAction(nameof(Manage));
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            try
+            {
+                GameSessionEditModel? model = await boardGameSessionsService.GetGameSessionForEditAsync(id);
+
+                if (model == null)
+                {
+                    return NotFound();
+                }
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return this.RedirectToAction(nameof(Manage));
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(GameSessionEditModel model)
+        {
+            if (!ModelState.IsValid)
+            {                
+                model.BoardGames = await boardGameSessionsService.GetAllBoardGamesAsync();
+                model.Clubs = await boardGameSessionsService.GetAllClubsAsync();
+
+                return View(model);
+            }
+
+            try
+            {
+                await boardGameSessionsService.EditGameSessionAsync(model);
+                return RedirectToAction("Manage");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred while updating the session.");
+                model.BoardGames = await boardGameSessionsService.GetAllBoardGamesAsync();
+                model.Clubs = await boardGameSessionsService.GetAllClubsAsync();
+
+                return View(model);
             }
         }
     }
