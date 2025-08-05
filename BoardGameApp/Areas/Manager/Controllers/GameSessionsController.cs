@@ -1,6 +1,8 @@
 ﻿namespace BoardGameApp.Areas.Manager.Controllers
 {
     using BoardGameApp.Controllers;
+    using BoardGameApp.Data.Models;
+    using BoardGameApp.Data.Repository.Interfaces;
     using BoardGameApp.Services.Core;
     using BoardGameApp.Services.Core.Contracts;
     using BoardGameApp.Services.Core.Manager;
@@ -16,11 +18,14 @@
     {
         private readonly IBoardGameSessionsService boardGameSessionsService;
         private readonly ICatalogService catalogService;
+        
         public GameSessionsController(IBoardGameSessionsService boardGameSessionsService, ICatalogService catalogService)
         {
             this.boardGameSessionsService = boardGameSessionsService;
-            this.catalogService = catalogService;
+            this.catalogService = catalogService;            
         }
+        
+        [HttpGet]
         public async Task<IActionResult> Manage()
         {
             try
@@ -134,52 +139,17 @@
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
-        {
-            try
-            {
-                GameSessionEditModel? model = await boardGameSessionsService.GetGameSessionForEditAsync(id);
-
-                if (model == null)
-                {
-                    return NotFound();
-                }
-
-                return View(model);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return this.RedirectToAction(nameof(Manage));
-            }
-        }
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(GameSessionEditModel model)
+        public async Task<IActionResult> Archive(Guid id)
         {
-            if (!ModelState.IsValid)
-            {                
-                model.BoardGames = await boardGameSessionsService.GetAllBoardGamesAsync();
-                model.Clubs = await boardGameSessionsService.GetAllClubsAsync();
+            bool success = await boardGameSessionsService.ArchiveAsync(id);
 
-                return View(model);
-            }
-
-            try
+            if (!success)
             {
-                await boardGameSessionsService.EditGameSessionAsync(model);
-                return RedirectToAction("Manage");
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, "An error occurred while updating the session.");
-                model.BoardGames = await boardGameSessionsService.GetAllBoardGamesAsync();
-                model.Clubs = await boardGameSessionsService.GetAllClubsAsync();
 
-                return View(model);
-            }
+            return RedirectToAction(nameof(Manage), "GameSessions", new { area = "Manager" });
         }
     }
 }

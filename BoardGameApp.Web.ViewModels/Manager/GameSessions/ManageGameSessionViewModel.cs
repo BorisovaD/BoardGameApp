@@ -9,6 +9,9 @@
     public class ManageGameSessionViewModel
     {
         public Guid Id { get; set; }
+
+        public Guid? GameSessionId { get; set; }
+
         public Guid ClubId { get; set; }
 
         public Guid BoardGameId { get; set; }

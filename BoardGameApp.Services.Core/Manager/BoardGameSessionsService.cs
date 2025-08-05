@@ -32,8 +32,8 @@
             GameSession? session = new GameSession
             {
                 Id = Guid.NewGuid(),
-                StartTime = DateTime.Today.AddHours(model.StartHour),
-                EndTime = DateTime.Today.AddHours(model.EndHour),
+                StartTime = DateTime.Today.AddDays(7).AddHours(model.StartHour),
+                EndTime = DateTime.Today.AddDays(7).AddHours(model.EndHour),
                 MaxPlayers = model.MaxPlayers,
                 CurrentPlayers = 0,
                 BoardGameId = model.BoardGameId,
@@ -48,24 +48,35 @@
             return session.Id;
         }
 
-        public async Task EditGameSessionAsync(GameSessionEditModel model)
+        public async Task<bool> ArchiveAsync(Guid boardGameId)
         {
+            ClubBoardGame? clubBoardGame = await this.clubBoardGameRepository
+                .All()
+                .Where(cb => !cb.IsDeleted)
+                .Include(cb => cb.BoardGame)
+                .FirstOrDefaultAsync(cb => cb.BoardGameId == boardGameId);
+
+            if (clubBoardGame == null)
+            {
+                return false;
+            }
+
             GameSession? session = await gameSessionRepository
                 .All()
-                .FirstOrDefaultAsync(gs => gs.Id == model.Id);
+                .FirstOrDefaultAsync(s =>
+                    s.BoardGameId == boardGameId &&
+                    s.ClubId == clubBoardGame.ClubId &&
+                    !s.IsDeleted);
 
             if (session == null)
             {
-                throw new Exception("Game session not found.");
+                return false;
             }
 
-            session.StartTime = DateTime.Today.AddHours(model.StartTime);
-            session.EndTime = DateTime.Today.AddHours(model.EndTime);
-            session.MaxPlayers = model.MaxPlayers;
-            session.BoardGameId = model.BoardGameId;
-            session.ClubId = model.ClubId;
-
+            await gameSessionRepository.SoftDeleteAsync(session);
             await gameSessionRepository.SaveChangesAsync();
+
+            return true;
         }
 
         public async  Task<IEnumerable<SelectListItem>> GetAllBoardGamesAsync()
@@ -93,34 +104,7 @@
                 })
                 .ToListAsync();
         }
-
-        public async Task<GameSessionEditModel?> GetGameSessionForEditAsync(Guid id)
-        {
-            GameSessionEditModel? session = await gameSessionRepository
-                .All()
-                .Where(gs => gs.Id == id && !gs.IsDeleted)
-                .Select(gs => new GameSessionEditModel
-                {
-                    Id = gs.Id,
-                    StartTime = gs.StartTime.Hour,
-                    EndTime = gs.EndTime.Hour,
-                    MaxPlayers = gs.MaxPlayers,
-                    BoardGameId = gs.BoardGameId,
-                    ClubId = gs.ClubId,
-                })
-                .FirstOrDefaultAsync();
-
-            if (session == null)
-            {
-                return null;
-            }
-
-            session.BoardGames = await GetAllBoardGamesAsync();
-            session.Clubs = await GetAllClubsAsync();
-
-            return session;
-        }
-
+               
         public async Task<IEnumerable<ManageGameSessionViewModel>> GetManageViewModelAsync(Guid clubId)
         {
             IEnumerable<ClubBoardGame> games = await clubBoardGameRepository

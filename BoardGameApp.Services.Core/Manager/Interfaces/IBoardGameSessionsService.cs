@@ -20,8 +20,6 @@
 
         Task<Guid> AddGameSessionAsync(AddGameSessionViewModel model, Guid organizerId);
 
-        Task<GameSessionEditModel?> GetGameSessionForEditAsync(Guid id);
-
-        Task EditGameSessionAsync(GameSessionEditModel model);
+        Task<bool> ArchiveAsync(Guid boardGameId);
     }
 }

@@ -28,7 +28,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoardGameApp.Data\BoardGameApp.Data.csproj" />
+    <ProjectReference Include="..\BoardGameApp.GCommon\BoardGameApp.GCommon.csproj" />
     <ProjectReference Include="..\BoardGameApp.Services.Core\BoardGameApp.Services.Core.csproj" />
+    <ProjectReference Include="..\BoardGameApp.Web.ViewModels\BoardGameApp.Web.ViewModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
