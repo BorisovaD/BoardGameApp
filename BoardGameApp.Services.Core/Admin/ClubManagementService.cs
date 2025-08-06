@@ -34,8 +34,8 @@
             if (inputModel == null)
                 return false;
 
-            var city = await this.cityRepository.All()
-                .FirstOrDefaultAsync(c => c.Name == inputModel.CityName);
+            var city =  this.cityRepository.All()
+                .FirstOrDefault(c => c.Name == inputModel.CityName);
 
             if (city == null)
             {
@@ -72,15 +72,14 @@
             if (inputModel == null)
                 return false;
 
-            Club? clubToEdit = await this.baseRepository.All()
-                .Include(c => c.City)
-                .FirstOrDefaultAsync(c => c.Id == inputModel.Id);
+            Club? clubToEdit = this.baseRepository.All()                
+                .FirstOrDefault(c => c.Id == inputModel.Id);
 
             if (clubToEdit == null)
                 return false;
 
-            City? city = await this.cityRepository.All()
-                .FirstOrDefaultAsync(c => c.Name == inputModel.CityName);
+            City? city = this.cityRepository.All()
+                .FirstOrDefault(c => c.Name == inputModel.CityName);
 
             if (city == null)
             {
@@ -105,27 +104,22 @@
 
         public async Task<ClubManagementEditInputModel?> GetClubForEditingAsync(Guid id)
         {
-            ClubManagementEditInputModel? editModel = null;
-
-            
-            Club? clubToEdit = await this.baseRepository
+            var clubToEdit = this.baseRepository
                 .All()
-                .Include(c => c.City)
-                .SingleOrDefaultAsync(c => c.Id == id);
+                .SingleOrDefault(c => c.Id == id);
 
-            if (clubToEdit != null)
+            if (clubToEdit == null)
             {
-                editModel = new ClubManagementEditInputModel()
-                {
-                    Id = clubToEdit.Id,
-                    ClubName = clubToEdit.Name,
-                    Address = clubToEdit.Address,
-                    CityName = clubToEdit.City.Name                        
-                };
+                return null;
             }
-            
 
-            return editModel;
+            return new ClubManagementEditInputModel()
+            {
+                Id = clubToEdit.Id,
+                ClubName = clubToEdit.Name,
+                Address = clubToEdit.Address,
+                CityName = clubToEdit.City?.Name ?? "Unknown"
+            };
         }
 
         public async Task<IEnumerable<ClubManagementIndexViewModel>> GetClubManagementInfoAsync()
@@ -149,9 +143,9 @@
 
         public async Task<(bool Success, bool IsNowDeleted)> ToggleClubDeletionAsync(Guid id)
         {
-            Club? clubToToggle = await this.baseRepository
+            Club? clubToToggle = this.baseRepository
                 .All()
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .FirstOrDefault(c => c.Id == id);
 
             if (clubToToggle == null)
             {

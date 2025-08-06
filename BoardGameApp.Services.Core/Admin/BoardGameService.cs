@@ -138,14 +138,14 @@
 
             if (id.HasValue)
             {
-                BoardGame? boardGameModel = await boardGameRepository
+                BoardGame? boardGameModel = boardGameRepository
                     .All()
                     .Where(g => g.IsDeleted == false)
                     .Include(g => g.BoardGameCategories)
                     .ThenInclude(bgc => bgc.Category)
                     .Include(g => g.FavoritedByUsers)
                     .AsNoTracking()
-                    .SingleOrDefaultAsync(g => g.Id == id.Value);
+                    .SingleOrDefault(g => g.Id == id.Value);
 
                 if (boardGameModel != null)
                 {
@@ -177,11 +177,11 @@
 
             if (boardGameId != null)
             {
-                BoardGame? deleteBoardGameModel = await boardGameRepository
+                BoardGame? deleteBoardGameModel = boardGameRepository
                     .All()
                     .Where(g => g.IsDeleted == false)
                     .AsNoTracking()
-                    .SingleOrDefaultAsync(g => g.Id == boardGameId.Value);
+                    .SingleOrDefault(g => g.Id == boardGameId.Value);
 
                 if (deleteBoardGameModel != null)
                 {
@@ -203,13 +203,13 @@
 
             if (boardGameId != null)
             {
-                BoardGame? editBoardGameModel = await boardGameRepository 
+                BoardGame? editBoardGameModel = boardGameRepository 
                     .All()                    
                     .Where(g => g.IsDeleted == false)
                     .Include(g => g.BoardGameCategories)
                     .ThenInclude(bc => bc.Category)
                     .AsNoTracking()
-                    .SingleOrDefaultAsync(g => g.Id == boardGameId);
+                    .SingleOrDefault(g => g.Id == boardGameId);
 
                 if (editBoardGameModel != null)
                 {
@@ -234,19 +234,19 @@
         }
 
         public async Task<IEnumerable<FavoritesBoardGameViewModel>?> GetUserFavoritesBoardGameAsync(Guid? userId)
-        {  
+        {
             if (userId == null)
             {
                 return Enumerable.Empty<FavoritesBoardGameViewModel>();
             }
 
-            IEnumerable<FavoritesBoardGameViewModel> favBoardGames = await favoritesRepository
+            var favEntities = favoritesRepository
                 .All()
-                .Include(uf => uf.BoardGame)
-                .ThenInclude(bc => bc.BoardGameCategories)
-                .ThenInclude(c => c.Category)
                 .Where(bc => bc.UserId == userId && !bc.BoardGame.IsDeleted)
-                .Select(f => new FavoritesBoardGameViewModel()
+                .ToList(); 
+
+            var favBoardGames = favEntities
+                .Select(f => new FavoritesBoardGameViewModel
                 {
                     Id = f.BoardGameId,
                     Title = f.BoardGame.Title,
@@ -256,13 +256,14 @@
                     MinPlayers = f.BoardGame.MinPlayers.ToString(),
                     MaxPlayers = f.BoardGame.MaxPlayers.ToString(),
                     Duration = f.BoardGame.Duration.ToString(),
-                    Categories = f.BoardGame.BoardGameCategories
-                                     .Select(bc => bc.Category.Name)
-                                     .ToList()
+                    Categories = f.BoardGame.BoardGameCategories?
+                                    .Where(bc => bc.Category != null)
+                                    .Select(bc => bc.Category!.Name)
+                                    .ToList() ?? new List<string>()
                 })
-                .ToArrayAsync();
+                .ToList();
 
-            return favBoardGames;
+            return await Task.FromResult(favBoardGames);
         }
 
         public async Task<bool> PersistUpdatedGameBoardAsync(Guid? userId, EditBoardGameInputModel inputModel)
@@ -274,10 +275,10 @@
                 BoardgameUser? user = await userManager.FindByIdAsync(userId.Value.ToString());
 
 
-                BoardGame? updatedBoardGame = await boardGameRepository
+                BoardGame? updatedBoardGame = boardGameRepository
                     .All()
                     .Include(bg => bg.BoardGameCategories)
-                    .FirstOrDefaultAsync(bg => bg.Id == inputModel.Id);
+                    .FirstOrDefault(bg => bg.Id == inputModel.Id);
 
                 if (user != null && updatedBoardGame != null)
                 {
