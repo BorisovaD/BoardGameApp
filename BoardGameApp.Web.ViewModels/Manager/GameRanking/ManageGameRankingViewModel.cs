@@ -12,6 +12,6 @@
 
         public string BoardGameTitle { get; set; } = null!;
                
-        public DateTime LastUpdated { get; set; }
+        public DateTime? LastUpdated { get; set; }
     }
 }

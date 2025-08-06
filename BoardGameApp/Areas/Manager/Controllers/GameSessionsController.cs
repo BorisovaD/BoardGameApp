@@ -138,18 +138,6 @@
                 return this.RedirectToAction(nameof(Manage));
             }
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Archive(Guid id)
-        {
-            bool success = await boardGameSessionsService.ArchiveAsync(id);
-
-            if (!success)
-            {
-                return NotFound();
-            }
-
-            return RedirectToAction(nameof(Manage), "GameSessions", new { area = "Manager" });
-        }
+        
     }
 }

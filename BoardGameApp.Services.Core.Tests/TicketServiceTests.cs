@@ -18,6 +18,7 @@
         private Mock<IRepository<Ticket>> ticketRepoMock;
         private Mock<IRepository<GameSession>> sessionRepoMock;
         private Mock<IRepository<Reservation>> reservationRepoMock;
+        private Mock<IRepository<GameRanking>> rankingRepoMock;
         private ITicketService ticketService;
 
         [SetUp]
@@ -26,11 +27,13 @@
             ticketRepoMock = new Mock<IRepository<Ticket>>();
             sessionRepoMock = new Mock<IRepository<GameSession>>();
             reservationRepoMock = new Mock<IRepository<Reservation>>();
+            rankingRepoMock = new Mock<IRepository<GameRanking>>();
 
             ticketService = new TicketService(
                 ticketRepoMock.Object,
                 sessionRepoMock.Object,
-                reservationRepoMock.Object
+                reservationRepoMock.Object,
+                rankingRepoMock.Object
             );
         }
 

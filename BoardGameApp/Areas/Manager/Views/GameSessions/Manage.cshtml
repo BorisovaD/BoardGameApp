@@ -131,12 +131,7 @@
                         }
                     </div>
                 </td>                
-                <td>
-                    <form asp-action="Archive" asp-route-id="@game.GameSessionId" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to archive this session?');">
-                            📦 Archive
-                        </button>
-                    </form>
+                <td>                    
                     <form id="form-@gameId" method="post" asp-controller="GameSessions" asp-action="Save">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="BoardGameId" value="@gameId" />

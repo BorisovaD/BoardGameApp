@@ -60,6 +60,7 @@ builder.Services.AddScoped<ITicketReservationService, TicketReservationService>(
 
 builder.Services.AddScoped<IClubService, ClubService>();
 builder.Services.AddScoped<IGameSessionService, GameSessionService>();
+builder.Services.AddScoped<IRankingService, RankingService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 

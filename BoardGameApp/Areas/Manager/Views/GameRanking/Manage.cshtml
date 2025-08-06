@@ -18,26 +18,26 @@
         <tbody>
             @foreach (var item in Model)
             {
+                <form method="post" asp-action="Update" asp-controller="GameRanking" id="form-@item.Id">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Id" value="@item.Id" />
                 <tr>
                     <td>@item.Username</td>
                     <td>@item.BoardGameTitle</td>
                     <td>
-                        <input type="number" name="Wins" form="form-@item.Id" value="@item.Wins" min="0" />
+                        <input type="number" name="Wins" value="@item.Wins" min="0" />
                     </td>
                     <td>
-                        <input type="number" name="Losses" form="form-@item.Id" value="@item.Losses" min="0" />
+                        <input type="number" name="Losses" value="@item.Losses" min="0" />
                     </td>
                     <td>
-                        <input type="number" name="Draws" form="form-@item.Id" value="@item.Draws" min="0" />
+                        <input type="number" name="Draws" value="@item.Draws" min="0" />
                     </td>
                     <td>
-                        <form id="form-@item.Id" method="post" asp-action="Update" asp-controller="GameRanking">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="Id" value="@item.Id" />
-                            <button type="submit" class="btn-save">Save</button>
-                        </form>
+                        <button type="submit" class="btn-save">Save</button>
                     </td>
                 </tr>
+                </form>
             }
         </tbody>
     </table>

@@ -240,30 +240,34 @@
                 return Enumerable.Empty<FavoritesBoardGameViewModel>();
             }
 
-            var favEntities = favoritesRepository
+            var favEntities = await favoritesRepository
                 .All()
                 .Where(bc => bc.UserId == userId && !bc.BoardGame.IsDeleted)
-                .ToList(); 
+                .Include(bc => bc.BoardGame)
+                    .ThenInclude(bg => bg.BoardGameCategories!)
+                        .ThenInclude(bgc => bgc.Category)
+                .ToListAsync();
 
             var favBoardGames = favEntities
+                .Where(f => f.BoardGame != null)
                 .Select(f => new FavoritesBoardGameViewModel
                 {
                     Id = f.BoardGameId,
-                    Title = f.BoardGame.Title,
+                    Title = f.BoardGame!.Title,
                     Description = f.BoardGame.Description,
                     ImageUrl = f.BoardGame.ImageUrl,
                     RulesUrl = f.BoardGame.RulesUrl,
                     MinPlayers = f.BoardGame.MinPlayers.ToString(),
                     MaxPlayers = f.BoardGame.MaxPlayers.ToString(),
                     Duration = f.BoardGame.Duration.ToString(),
-                    Categories = f.BoardGame.BoardGameCategories?
-                                    .Where(bc => bc.Category != null)
-                                    .Select(bc => bc.Category!.Name)
-                                    .ToList() ?? new List<string>()
+                    Categories = f.BoardGame.BoardGameCategories!
+                        .Where(bc => bc.Category != null)
+                        .Select(bc => bc.Category!.Name)
+                        .ToList()
                 })
                 .ToList();
 
-            return await Task.FromResult(favBoardGames);
+            return favBoardGames;
         }
 
         public async Task<bool> PersistUpdatedGameBoardAsync(Guid? userId, EditBoardGameInputModel inputModel)

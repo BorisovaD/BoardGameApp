@@ -20,7 +20,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Manage()
+        public async Task<IActionResult> Manage(Guid boardGameId)
         {
             try
             {

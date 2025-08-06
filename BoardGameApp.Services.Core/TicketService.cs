@@ -18,11 +18,13 @@
         private readonly IRepository<Ticket> ticketRepository;
         private readonly IRepository<GameSession> gameSessionRepository;
         private readonly IRepository<Reservation> reservationRepository;
-        public TicketService(IRepository<Ticket> ticketRepository, IRepository<GameSession> gameSessionRepository, IRepository<Reservation> reservationRepository)
+        private readonly IRepository<GameRanking> gameRankingRepository;
+        public TicketService(IRepository<Ticket> ticketRepository, IRepository<GameSession> gameSessionRepository, IRepository<Reservation> reservationRepository, IRepository<GameRanking> gameRankingRepository)
         {
             this.ticketRepository = ticketRepository;
             this.gameSessionRepository = gameSessionRepository;
             this.reservationRepository = reservationRepository;
+            this.gameRankingRepository = gameRankingRepository;
         }
 
         public async Task<bool> BuyTicketAsync(Guid userId, Guid gameSessionId, int ticketsToBuy)
@@ -75,6 +77,29 @@
             await ticketRepository.AddAsync(newTicket);
             await ticketRepository.SaveChangesAsync();
 
+            session.CurrentPlayers += ticketsToBuy;
+            await gameSessionRepository.SaveChangesAsync();
+
+            var existingRanking = await gameRankingRepository
+                .All()
+                .FirstOrDefaultAsync(r => r.UserId == userId && r.BoardGameId == session.BoardGameId);
+
+            if (existingRanking == null)
+            {
+                var newRanking = new GameRanking
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    BoardGameId = session.BoardGameId,
+                    Wins = 0,
+                    Losses = 0,
+                    Draws = 0,
+                    LastUpdated = DateTime.UtcNow
+                };
+
+                await gameRankingRepository.AddAsync(newRanking);
+                await gameRankingRepository.SaveChangesAsync();
+            }
             return true;
         }
 

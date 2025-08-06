@@ -46,38 +46,7 @@
             await gameSessionRepository.SaveChangesAsync();
 
             return session.Id;
-        }
-
-        public async Task<bool> ArchiveAsync(Guid boardGameId)
-        {
-            ClubBoardGame? clubBoardGame = await this.clubBoardGameRepository
-                .All()
-                .Where(cb => !cb.IsDeleted)
-                .Include(cb => cb.BoardGame)
-                .FirstOrDefaultAsync(cb => cb.BoardGameId == boardGameId);
-
-            if (clubBoardGame == null)
-            {
-                return false;
-            }
-
-            GameSession? session = await gameSessionRepository
-                .All()
-                .FirstOrDefaultAsync(s =>
-                    s.BoardGameId == boardGameId &&
-                    s.ClubId == clubBoardGame.ClubId &&
-                    !s.IsDeleted);
-
-            if (session == null)
-            {
-                return false;
-            }
-
-            await gameSessionRepository.SoftDeleteAsync(session);
-            await gameSessionRepository.SaveChangesAsync();
-
-            return true;
-        }
+        }       
 
         public async  Task<IEnumerable<SelectListItem>> GetAllBoardGamesAsync()
         {
@@ -115,7 +84,7 @@
 
             IEnumerable<GameSession> sessions = await gameSessionRepository
                 .All()
-                .Where(s => s.ClubId == clubId)
+                .Where(s => s.ClubId == clubId && s.IsDeleted == false)
                 .ToListAsync();
 
             IEnumerable<ManageGameSessionViewModel> result = games.Select(game =>
@@ -128,7 +97,8 @@
                     BoardGameId = game.BoardGameId,
                     BoardGameTitle = game.BoardGame.Title,
                     StartTime = session?.StartTime,
-                    EndTime = session?.EndTime
+                    EndTime = session?.EndTime,
+                    IsDeleted = false,
                 };
             }).ToList();
 

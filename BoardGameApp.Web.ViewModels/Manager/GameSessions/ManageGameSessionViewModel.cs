@@ -22,6 +22,6 @@
 
         public DateTime? EndTime { get; set; }
 
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; } 
     }
 }

@@ -19,7 +19,5 @@
         Task<IEnumerable<SelectListItem>> GetAllClubsAsync();
 
         Task<Guid> AddGameSessionAsync(AddGameSessionViewModel model, Guid organizerId);
-
-        Task<bool> ArchiveAsync(Guid boardGameId);
     }
 }

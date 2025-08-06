@@ -70,9 +70,9 @@
         left: 44%;
     }
 
-    #favorites {
+    #rankings {
         top: 11%;
-        left: 46%;
+        left: 44.2%;
     }
 
     .menu-button:hover {
@@ -91,11 +91,11 @@
     </button>
     <button class="menu-button" id="clubs" onclick="location.href='@Url.Action("Index", "Club")'">Clubs</button>
     <button class="menu-button" id="sessions" onclick="location.href='@Url.Action("Index", "GameSession")'">GameSessions</button>
-    <button class="menu-button" id="favorites" onclick="location.href='@Url.Action("Favorites", "BoardGame")'">Favorites</button>
+    <button class="menu-button" id="rankings" onclick="location.href='@Url.Action("Index", "Ranking")'">GameRanking</button>
 </div>
 
 <script>
-    document.getElementById("favorites").addEventListener("mouseenter", () => {
+    document.getElementById("rankings").addEventListener("mouseenter", () => {
         document.getElementById("pawn-red").style.transform = "translateX(-44.5vh)";
     });
 

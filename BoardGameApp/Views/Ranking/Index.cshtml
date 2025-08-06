@@ -1,0 +1,96 @@
+﻿@using BoardGameApp.Web.ViewModels.Ranking
+@model Dictionary<string, List<RankingViewModel>>
+
+<style>
+    .medal-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #ffffff;
+        color: #333;
+    }
+
+        .medal-table th, .medal-table td {
+            border: 1px solid #ddd;
+            padding: 12px 18px;
+            text-align: left;
+        }
+
+        .medal-table thead {
+            background-color: #f7f9fc;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .medal-table tbody tr:hover {
+            background-color: #e6f2ff;
+        }
+
+    .medal {
+        font-size: 1.3em;
+        vertical-align: middle;
+        margin-right: 6px;
+        display: inline-block;
+    }
+
+    .gold {
+        color: #FFD700; 
+        text-shadow: 0 0 5px #d4af37;
+    }
+
+    .silver {
+        color: #C0C0C0; 
+        text-shadow: 0 0 5px #a9a9a9;
+    }
+
+    .bronze {
+        color: #CD7F32; 
+        text-shadow: 0 0 5px #8c5a2e;
+    }
+</style>
+
+@foreach (var gameGroup in Model)
+{
+    <h3>@gameGroup.Key</h3>
+
+    <table class="table table-striped table-hover table-bordered medal-table">
+        <thead>
+            <tr>
+                <th>Place</th>
+                <th>User</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Draws</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < gameGroup.Value.Count; i++)
+            {
+                var ranking = gameGroup.Value[i];
+                <tr>
+                    <td>
+                        @switch (i)
+                        {
+                            case 0:
+                                <span class="medal gold">🥇</span>
+                                break;
+                            case 1:
+                                <span class="medal silver">🥈</span>
+                                break;
+                            case 2:
+                                <span class="medal bronze">🥉</span>
+                                break;
+                            default:
+                                @((i + 1).ToString())
+                                break;
+                        }
+                    </td>
+                    <td>@ranking.Username</td>
+                    <td>@ranking.Wins</td>
+                    <td>@ranking.Losses</td>
+                    <td>@ranking.Draws</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
