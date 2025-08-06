@@ -21,9 +21,9 @@
 
         public async Task ToggleGameInClubAsync(Guid clubId, Guid gameId)
         {
-            var existing = await clubBoardGameRepository
+            var existing = clubBoardGameRepository
                  .All()
-                 .FirstOrDefaultAsync(x => x.ClubId == clubId && x.BoardGameId == gameId);
+                 .FirstOrDefault(x => x.ClubId == clubId && x.BoardGameId == gameId);
 
             if (existing != null)
             {
